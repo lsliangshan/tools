@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
 const state = {
   appName: pkg.name,
-  theme: 'purple',
+  theme: 'black',
   showMask: false
 }
 

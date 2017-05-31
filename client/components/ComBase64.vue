@@ -5,10 +5,17 @@
     <!--</p>-->
     <p>请输入要进行编码或解码的字符：</p>
     <div class="wrapper" @mouseenter="showSrcCloseBtn" @mouseleave="hideSrcCloseBtn">
-      <textarea class="base64-src" v-model="srcStr"></textarea>
+      <textarea class="base64-src" id="base64-src" v-model="srcStr" placeholder="请输入待编码内容"></textarea>
       <transition name="src-close-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <div class="close" @click="removeSrc" v-if="availableSrcClose">
-          <md-icon>close</md-icon>
+        <div class="operations" v-if="availableSrcOperations">
+          <div class="close operate" @click="removeSrc">
+            <md-icon>close</md-icon>
+            <md-tooltip md-direction="right">清空文本</md-tooltip>
+          </div>
+          <div data-clipboard-target="#base64-src" class="copy operate">
+            <md-icon>content_copy</md-icon>
+            <md-tooltip md-direction="right">复制文本</md-tooltip>
+          </div>
         </div>
       </transition>
     </div>
@@ -22,10 +29,17 @@
     </div>
     <p>Base64编码或解码结果：</p>
     <div class="wrapper" @mouseenter="showDestCloseBtn" @mouseleave="hideDestCloseBtn">
-      <textarea class="base64-dest" v-model="destStr"></textarea>
+      <textarea class="base64-dest" id="base64-dest" v-model="destStr"></textarea>
       <transition name="dest-close-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-        <div class="close" @click="removeDest" v-if="availableDestClose">
-          <md-icon>close</md-icon>
+        <div class="operations" v-if="availableDestOperations">
+          <div class="close operate" @click="removeDest">
+            <md-icon>close</md-icon>
+            <md-tooltip md-direction="right">清空文本</md-tooltip>
+          </div>
+          <div data-clipboard-target="#base64-dest" class="copy operate">
+            <md-icon>content_copy</md-icon>
+            <md-tooltip md-direction="right">复制文本</md-tooltip>
+          </div>
         </div>
       </transition>
     </div>
@@ -35,19 +49,24 @@
 <script>
 //  require('../../static/js/base64.js')
   const Base64 = require('js-base64').Base64
+  const Clipboard = require('Clipboard')
+  console.log('===========', new Clipboard('.copy'))
   export default {
     data () {
       return {
-        srcStr: 'test src str',
-        destStr: 'test dest str',
-        availableSrcClose: false,
-        availableDestClose: false
+        srcStr: '',
+        destStr: '',
+        availableSrcOperations: false,
+        availableDestOperations: false
       }
     },
     computed: {
       theme () {
         return this.$store.state.theme
       }
+    },
+    created () {
+      new Clipboard('.copy', {})
     },
     methods: {
       encode () {
@@ -68,22 +87,22 @@
         console.log('清除destStr')
       },
       showSrcCloseBtn () {
-        this.availableSrcClose = true
+        this.availableSrcOperations = true
       },
       hideSrcCloseBtn () {
-        this.availableSrcClose = false
+        this.availableSrcOperations = false
       },
       showDestCloseBtn () {
-        this.availableDestClose = true
+        this.availableDestOperations = true
       },
       hideDestCloseBtn () {
-        this.availableDestClose = false
+        this.availableDestOperations = false
       }
     }
   }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
   .base64-container {
     width: 100%;
     height: 100%;
@@ -102,11 +121,22 @@
         height: 120px;
         padding: 8px 30px 8px 8px;
       }
-      .close {
+      .operations {
         position: absolute;
         top: 5px;
         right: 5px;
         cursor: pointer;
+        .operate {
+          position: relative;
+          .md-icon {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            min-height: 18px;
+            font-size: 18px;
+            margin-bottom: 5px;
+          }
+        }
       }
     }
     .btns {
@@ -114,5 +144,8 @@
       display: flex;
       align-items: center;
     }
+  }
+  .md-tooltip {
+    margin-top: -10px!important;
   }
 </style>

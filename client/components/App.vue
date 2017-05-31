@@ -4,7 +4,7 @@
     <transition name="global-mask-transition" enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
       <div id="global-mask" v-if="showMask"></div>
     </transition>
-    <transition name="side-menu-transition" enter-active-class="animated slideInLeft" leave-active-class="animated slideOutLeft">
+    <transition name="side-menu-transition" enter-active-class="animated-p3 slideInLeft" leave-active-class="animated slideOutLeft">
       <div id="side-menu-container" v-if="sideMenuShown">
         <div class="side-menu-mask" @click="hideSideMenu"></div>
         <div class="side-menu"></div>
@@ -69,7 +69,7 @@
         position: absolute;
         width: 200px;
         height: 100%;
-        background-color: #f266ff;
+        background-color: #ffffff;
       }
     }
     #global-mask {
