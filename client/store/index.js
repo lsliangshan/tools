@@ -10,7 +10,8 @@ Vue.use(Vuex)
 const state = {
   appName: pkg.name,
   theme: 'black',
-  showMask: false
+  showMask: false,
+  globalTips: {}
 }
 
 const store = new Vuex.Store({

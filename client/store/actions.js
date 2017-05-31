@@ -1,4 +1,4 @@
-/***
+/**
  **                                                          _ooOoo_
  **                                                         o8888888o
  **                                                         88" . "88
@@ -33,9 +33,9 @@
 /**
  * Created by liangshan on 2017/5/16.
  */
-import * as types from './mutation-types'
-export const incrementAsync = ({ commit }) => {
-  setTimeout(() => {
-    commit(types.INCREMENT_COUNT)
-  }, 200)
-}
+// import * as types from './mutation-types'
+// export const incrementAsync = ({ commit }) => {
+//   setTimeout(() => {
+//     commit(types.INCREMENT_COUNT)
+//   }, 200)
+// }

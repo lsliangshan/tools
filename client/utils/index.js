@@ -31,39 +31,42 @@
  **                                              不见满街漂亮妹，哪个归得程序员？
  */
 /**
- * Created by liangshan on 2017/5/17.
+ * Created by liangshan on 2017/5/31.
  */
-import store from './'
-import * as types from './mutation-types'
-import * as utils from '../utils/index'
 
-export const mutations = {
-  [types.NEED_MASK] (state, data) {
-    state.showMask = data.shown
-  },
-  [types.INSERT_TIP] (state, data) {
-    const _uid = utils.getUUID('global_tip_' + (+new Date()))
-    if (!state.globalTips.hasOwnProperty(_uid)) {
-      state.globalTips[_uid] = Object.assign({}, {
-        type: 'error',
-        message: '这是提示内容',
-        cancel: false,
-        duration: 3000,
-        animationIn: 'fadeIn',
-        animationOut: 'fadeOut'
-      }, data)
-      store.vms.app.$forceUpdate()
-      const hideTimeout = setTimeout(function () {
-        store.vms[_uid].shown = false
-        delete state.globalTips[_uid]
-        clearTimeout(hideTimeout)
-      }, data.duration || 3000)
-    }
-  },
-  [types.DEL_TIP] (state, data) {
-    if (state.globalTips.hasOwnProperty(data.id)) {
-      store.vms[data.id].shown = false
-      delete state.globalTips[data.id]
-    }
+function bin2hex (s) {
+  let i
+  let l
+  let o = ''
+  let n
+  s += ''
+  for (i = 0, l = s.length; i < l; i++) {
+    n = s.charCodeAt(i).toString(16)
+    o += n.length < 2 ? '0' + n : n
   }
+  return o
+}
+
+export function getUUID (prefix) {
+  /**
+   * 生成UUID
+   * @param {txt}
+   * @return String
+   */
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  ctx.textBaseline = 'top'
+  ctx.font = '14px "Arial"'
+  ctx.textBaseline = 'zhaopin'
+  ctx.fillStyle = '#f60'
+  ctx.fillRect(125, 1, 62, 20)
+  ctx.fillStyle = '#069'
+  ctx.fillText(prefix, 2, 15)
+  ctx.fillStyle = 'rgba(102, 204, 0, 0.7)'
+  ctx.fillText(prefix, 4, 17)
+
+  const b64 = canvas.toDataURL().replace('data:image/png;base64,', '')
+  const bin = window.atob(b64)
+  const crc = bin2hex(bin.slice(-16, -12))
+  return crc
 }

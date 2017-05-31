@@ -35,57 +35,7 @@
  */
 export const NEED_MASK = 'NEED_MASK'
 
-// 强制更新session视图
-export const UPDATE_SESSION = 'UPDATE_SESSION'
-
-// 强制更新chat视图
-export const UPDATE_CHAT = 'UPDATE_CHAT'
-export const UPDATE_CHAT_VIEW = 'UPDATE_CHAT_VIEW'
-
-export const SHOW_LOADING = 'SHOW_LOADING'
-export const HIDE_LOADING = 'HIDE_LOADING'
-
-export const INCREMENT_COUNT = 'INCREMENT_COUNT'
-export const DECREMENT_COUNT = 'DECREMENT_COUNT'
-export const ADD_MESSAGE = 'ADD_MESSAGE'
-
-export const INIT_SESSIONS = 'INIT_SESSIONS'
-export const INIT_SESSION_MEMBERS = 'INIT_SESSION_MEMBERS'
-export const SET_CURRENT_SESSION = 'SET_CURRENT_SESSION'
-export const RESET_CURRENT_SESSION = 'RESET_CURRENT_SESSION'
-export const SET_CURRENT_SESSION_INFO = 'SET_CURRENT_SESSION_INFO'
-export const INIT_PERSON_INFO = 'INIT_PERSON_INFO'
-
-// 新增会话
-export const ADD_SESSION = 'ADD_SESSION'
-
-// 删除会话
-export const REMOVE_SESSION = 'REMOVE_SESSION'
-
-// 接收到新消息
-export const RECEIVED_NEW_MESSAGE = 'RECEIVED_NEW_MESSAGE'
-
-// 初始化所有会话未读消息数量
-export const INIT_ALL_UNREAD_COUNT = 'INIT_ALL_UNREAD_COUNT'
-
-// 清空会话未读数量
-export const CLEAR_UNREAD_COUNT = 'CLEAR_UNREAD_COUNT'
-
-// 缓存会话消息
-export const INIT_LOCAL_MESSAGES = 'INIT_LOCAL_MESSAGES'
-
-// 发送消息成功
-export const SEND_MESSAGE_SUCCESS = 'SEND_MESSAGE_SUCCESS'
-
-// 更新消息
-export const UPDATE_MESSAGE = 'UPDATE_MESSAGE'
-
-// 聊天内容滚动到最后
-export const DO_SCROLL = 'DO_SCROLL'
-
-// Socketio
-export const SOCKET_CONNECT = 'SOCKET_CONNECT'
-export const SOCKET_DISCONNECT = 'SOCKET_DISCONNECT'
-export const SOCKET_RESPONSE = 'SOCKET_RESPONSE'
-
-export const SOCKET_GET_CONVERSATION_LIST = 'SOCKET_GET_CONVERSATION_LIST'
+// 新增一个全局tip
+export const INSERT_TIP = 'INSERT_TIP'
+// 删除一个全局tip
+export const DEL_TIP = 'DEL_TIP'
