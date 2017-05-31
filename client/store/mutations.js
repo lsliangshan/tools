@@ -66,20 +66,35 @@ export const mutations = {
       delete state.globalTips[data.id]
     }
   },
-  [types.SHOW_DIALOG] (state, data) {
-    state.globalDialog = {
-      shown: true,
-      title: data.title || '提示框',
-      content: data.content || '提示内容',
-      okText: data.okText || '确认',
-      cancelText: data.cancelText || '取消',
-      ok: data.ok || function () {},
-      cancel: data.cancel || function () {},
-      from: data.from || '',
-      to: data.to || ''
+  [types.OPEN_DIALOG] (state, data) {
+    if (data) {
+      state.globalDialog = {
+        shown: true,
+        title: data.title ? data.title : '提示框',
+        content: data.content ? data.content : '提示内容',
+        okText: data.okText ? data.okText : '确认',
+        cancelText: data.cancelText,
+        ok: data.ok ? data.ok : function () {},
+        cancel: data.cancel ? data.cancel : function () {},
+        from: data.from ? data.from : '#global-dialog-container',
+        to: data.to ? data.to : '#global-dialog-container'
+      }
+    } else {
+      state.globalDialog = {
+        shown: true,
+        title: '提示框',
+        content: '提示内容',
+        okText: '确认',
+        cancelText: '',
+        ok: function () {},
+        cancel: function () {},
+        from: '#global-dialog-container',
+        to: '#global-dialog-container'
+      }
     }
+    store.vms['globalDialog'].openDialog('globalDialog')
   },
-  [types.HIDE_DIALOG] (state) {
+  [types.CLOSE_DIALOG] (state) {
     state.globalDialog = {
       shown: false,
       title: '提示框',
@@ -88,8 +103,9 @@ export const mutations = {
       cancelText: '取消',
       ok: function () {},
       cancel: function () {},
-      from: '',
-      to: ''
+      from: '#global-dialog-container',
+      to: '#global-dialog-container'
     }
+    store.vms['globalDialog'].closeDialog('globalDialog')
   }
 }
