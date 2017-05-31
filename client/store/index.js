@@ -22,6 +22,13 @@ const state = {
     cancelText: '取消',
     ok: noop,
     cancel: noop
+  },
+  globalAlert: {
+    shown: false,
+    title: '标题',
+    content: '弹窗内容',
+    okText: '好的',
+    ok: noop
   }
 }
 

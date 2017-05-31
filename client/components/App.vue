@@ -12,17 +12,12 @@
     </transition>
     <div id="global-tip-container">
       <com-tip v-for="(value, item) in globalTips" :key="item" :data-id="item" :data-opts="globalTips[item]"></com-tip>
-      <!--<transition-group name="global-tip-transition" tag="div" :class="false" @before-enter="beforeEnter" @enter="enter" @leave="leave">-->
-        <!--<div v-for="(value, item) in globalTips" :key="item" class="item" :class="globalTips[item].type" :ref="item">-->
-          <!--<p v-text="globalTips[item].message"></p>-->
-          <!--<div class="close">-->
-            <!--<md-icon>close</md-icon>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</transition-group>-->
     </div>
     <div id="global-dialog-container">
       <com-dialog></com-dialog>
+    </div>
+    <div id="global-alert-container">
+      <com-alert></com-alert>
     </div>
   </div>
 </template>
@@ -31,6 +26,7 @@
   const types = require('../store/mutation-types.js')
   import ComTip from './ComTip.vue'
   import ComDialog from './ComDialog.vue'
+  import ComAlert from './ComAlert.vue'
   export default {
     data () {
       return {
@@ -67,7 +63,8 @@
     },
     components: {
       ComTip,
-      ComDialog
+      ComDialog,
+      ComAlert
     }
   }
 </script>

@@ -40,5 +40,10 @@ export const INSERT_TIP = 'INSERT_TIP'
 // 删除一个全局tip
 export const DEL_TIP = 'DEL_TIP'
 
+// Dialog
 export const OPEN_DIALOG = 'OPEN_DIALOG'
 export const CLOSE_DIALOG = 'CLOSE_DIALOG'
+
+// Alert
+export const OPEN_ALERT = 'OPEN_ALERT'
+export const CLOSE_ALERT = 'CLOSE_ALERT'

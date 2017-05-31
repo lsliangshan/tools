@@ -107,5 +107,35 @@ export const mutations = {
       to: '#global-dialog-container'
     }
     store.vms['globalDialog'].closeDialog('globalDialog')
+  },
+  [types.OPEN_ALERT] (state, data) {
+    if (data) {
+      state.globalAlert = {
+        shown: true,
+        title: data.title ? data.title : '标题',
+        content: data.content ? data.content : '弹窗内容',
+        okText: data.okText ? data.okText : '好的',
+        ok: data.ok ? data.ok : function () {}
+      }
+    } else {
+      state.globalAlert = {
+        shown: true,
+        title: '标题',
+        content: '弹窗内容',
+        okText: '好的',
+        ok: function () {}
+      }
+    }
+    store.vms['globalAlert'].openDialog('globalAlert')
+  },
+  [types.CLOSE_ALERT] (state) {
+    state.globalAlert = {
+      shown: false,
+      title: '标题',
+      content: '弹窗内容',
+      okText: '好的',
+      ok: function () {}
+    }
+    store.vms['globalAlert'].closeDialog('globalAlert')
   }
 }
