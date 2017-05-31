@@ -1,5 +1,5 @@
 {
-  "name": "tools",
+  "name": "Demo",
   "version": "0.1.0",
   "description": "在线工具集",
   "main": "client/index.js",

@@ -47,10 +47,9 @@
 </template>
 
 <script>
-//  require('../../static/js/base64.js')
+  import * as types from '../store/mutation-types'
   const Base64 = require('js-base64').Base64
   const Clipboard = require('Clipboard')
-  console.log('===========', new Clipboard('.copy'))
   export default {
     data () {
       return {
@@ -66,25 +65,50 @@
       }
     },
     created () {
-      new Clipboard('.copy', {})
+      const that = this
+      const clipboard = new Clipboard('.copy', {})
+      clipboard.on('success', function (e) {
+        if (e.text.trim() !== '') {
+          let _msg = ''
+          if (e.action === 'copy') {
+            _msg = '复制成功'
+          } else if (e.action === 'cut') {
+            _msg = '剪切成功'
+          }
+          that.$store.commit(types.INSERT_TIP, {
+            message: _msg,
+            cancel: false
+          })
+        }
+      })
+      clipboard.on('error', function (e) {
+        if (e.text.trim() !== '') {
+          let _msg = ''
+          if (e.action === 'copy') {
+            _msg = '复制失败'
+          } else if (e.action === 'cut') {
+            _msg = '剪切失败'
+          }
+          that.$store.commit(types.INSERT_TIP, {
+            type: 'error',
+            message: _msg,
+            cancel: false
+          })
+        }
+      })
     },
     methods: {
       encode () {
-//        this.destStr = doEncode(this.srcStr)
         this.destStr = Base64.encode(this.srcStr)
-        console.log('....加密')
       },
       decode () {
         this.destStr = Base64.decode(this.srcStr)
-        console.log('....解密')
       },
       removeSrc () {
         this.srcStr = ''
-        console.log('清除srcStr')
       },
       removeDest () {
         this.destStr = ''
-        console.log('清除destStr')
       },
       showSrcCloseBtn () {
         this.availableSrcOperations = true

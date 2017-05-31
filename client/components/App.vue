@@ -21,12 +21,16 @@
         <!--</div>-->
       <!--</transition-group>-->
     </div>
+    <div id="global-dialog-container">
+      <com-dialog></com-dialog>
+    </div>
   </div>
 </template>
 
 <script>
   const types = require('../store/mutation-types.js')
   import ComTip from './ComTip.vue'
+  import ComDialog from './ComDialog.vue'
   export default {
     data () {
       return {
@@ -62,7 +66,8 @@
       }
     },
     components: {
-      ComTip
+      ComTip,
+      ComDialog
     }
   }
 </script>

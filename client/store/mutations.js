@@ -45,9 +45,9 @@ export const mutations = {
     const _uid = utils.getUUID('global_tip_' + (+new Date()))
     if (!state.globalTips.hasOwnProperty(_uid)) {
       state.globalTips[_uid] = Object.assign({}, {
-        type: 'error',
+        type: 'success',
         message: '这是提示内容',
-        cancel: false,
+        cancel: true,
         duration: 3000,
         animationIn: 'fadeIn',
         animationOut: 'fadeOut'
@@ -64,6 +64,32 @@ export const mutations = {
     if (state.globalTips.hasOwnProperty(data.id)) {
       store.vms[data.id].shown = false
       delete state.globalTips[data.id]
+    }
+  },
+  [types.SHOW_DIALOG] (state, data) {
+    state.globalDialog = {
+      shown: true,
+      title: data.title || '提示框',
+      content: data.content || '提示内容',
+      okText: data.okText || '确认',
+      cancelText: data.cancelText || '取消',
+      ok: data.ok || function () {},
+      cancel: data.cancel || function () {},
+      from: data.from || '',
+      to: data.to || ''
+    }
+  },
+  [types.HIDE_DIALOG] (state) {
+    state.globalDialog = {
+      shown: false,
+      title: '提示框',
+      content: '提示内容',
+      okText: '确认',
+      cancelText: '取消',
+      ok: function () {},
+      cancel: function () {},
+      from: '',
+      to: ''
     }
   }
 }
