@@ -39,3 +39,13 @@
 //     commit(types.INCREMENT_COUNT)
 //   }, 200)
 // }
+
+export const contentBlur = () => {
+  const tabContent = document.querySelector('.md-tabs-content')
+  !tabContent.classList.contains('blur') && tabContent.classList.add('blur')
+}
+
+export const contentFocus = () => {
+  const tabContent = document.querySelector('.md-tabs-content')
+  tabContent.classList.contains('blur') && tabContent.classList.remove('blur')
+}

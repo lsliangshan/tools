@@ -70,43 +70,31 @@ export const mutations = {
     if (data) {
       state.globalDialog = {
         shown: true,
-        title: data.title ? data.title : '提示框',
-        content: data.content ? data.content : '提示内容',
+        title: data.title ? data.title : '提示',
+        content: data.content ? data.content : '',
+        contentHtml: data.contentHtml ? data.contentHtml : '',
         okText: data.okText ? data.okText : '确认',
-        cancelText: data.cancelText,
+        cancelText: data.cancelText ? data.cancelText : null,
         ok: data.ok ? data.ok : function () {},
         cancel: data.cancel ? data.cancel : function () {},
-        from: data.from ? data.from : '#global-dialog-container',
-        to: data.to ? data.to : '#global-dialog-container'
+        from: data.from ? data.from : null,
+        to: data.to ? data.to : null
       }
     } else {
       state.globalDialog = {
         shown: true,
-        title: '提示框',
+        title: '提示',
         content: '提示内容',
+        contentHtml: '',
         okText: '确认',
-        cancelText: '',
+        cancelText: null,
         ok: function () {},
         cancel: function () {},
-        from: '#global-dialog-container',
-        to: '#global-dialog-container'
+        from: null,
+        to: null
       }
     }
     store.vms['globalDialog'].openDialog('globalDialog')
-  },
-  [types.CLOSE_DIALOG] (state) {
-    state.globalDialog = {
-      shown: false,
-      title: '提示框',
-      content: '提示内容',
-      okText: '确认',
-      cancelText: '取消',
-      ok: function () {},
-      cancel: function () {},
-      from: '#global-dialog-container',
-      to: '#global-dialog-container'
-    }
-    store.vms['globalDialog'].closeDialog('globalDialog')
   },
   [types.OPEN_ALERT] (state, data) {
     if (data) {
@@ -114,6 +102,7 @@ export const mutations = {
         shown: true,
         title: data.title ? data.title : '标题',
         content: data.content ? data.content : '弹窗内容',
+        contentHtml: data.contentHtml ? data.contentHtml : null,
         okText: data.okText ? data.okText : '好的',
         ok: data.ok ? data.ok : function () {}
       }
@@ -122,20 +111,100 @@ export const mutations = {
         shown: true,
         title: '标题',
         content: '弹窗内容',
+        contentHtml: null,
         okText: '好的',
         ok: function () {}
       }
     }
     store.vms['globalAlert'].openDialog('globalAlert')
   },
-  [types.CLOSE_ALERT] (state) {
-    state.globalAlert = {
-      shown: false,
-      title: '标题',
-      content: '弹窗内容',
-      okText: '好的',
-      ok: function () {}
+  [types.OPEN_CONFIRM] (state, data) {
+    if (data) {
+      state.globalConfirm = {
+        shown: true,
+        title: data.title ? data.title : '确认',
+        content: data.content ? data.content : '是否确认？',
+        contentHtml: data.contentHtml ? data.contentHtml : null,
+        okText: data.okText ? data.okText : '确认',
+        cancelText: data.cancelText ? data.cancelText : '取消',
+        ok: data.ok ? data.ok : function () {},
+        cancel: data.cancel ? data.cancel : function () {}
+      }
+    } else {
+      state.globalConfirm = {
+        shown: true,
+        title: '确认',
+        content: '是否确认？',
+        contentHtml: null,
+        okText: '确认',
+        cancelText: '取消',
+        ok: function () {},
+        cancel: function () {}
+      }
     }
-    store.vms['globalAlert'].closeDialog('globalAlert')
+    store.vms['globalConfirm'].openDialog('globalConfirm')
+  },
+  [types.OPEN_PROMPT] (state, data) {
+    if (data) {
+      state.globalPrompt = {
+        shown: true,
+        title: data.title ? data.title : '标题',
+        content: data.content ? data.content : '',
+        contentHtml: data.contentHtml ? data.contentHtml : null,
+        inputId: data.inputId ? data.inputId : null,
+        inputName: data.inputName ? data.inputName : null,
+        inputMaxLength: data.inputMaxLength ? data.inputMaxLength : null,
+        inputPlaceholder: data.inputPlaceholder ? data.inputPlaceholder : null,
+        inputModel: data.inputModel ? data.inputModel : '',
+        okText: data.okText ? data.okText : '确认',
+        cancelText: data.cancelText ? data.cancelText : '取消',
+        ok: data.ok ? data.ok : function () {},
+        cancel: data.cancel ? data.cancel : function () {},
+        opened: data.opened ? data.opened : function () {},
+        closed: data.closed ? data.closed : function () {}
+      }
+    } else {
+      state.globalPrompt = {
+        shown: true,
+        title: '标题',
+        content: '',
+        contentHtml: null,
+        inputId: null,
+        inputName: null,
+        inputMaxLength: null,
+        inputPlaceholder: null,
+        inputModel: '',
+        okText: '确认',
+        cancelText: '取消',
+        ok: function () {},
+        cancel: function () {},
+        opened: function () {},
+        closed: function () {}
+      }
+    }
+    store.vms['globalPrompt'].openDialog('globalPrompt')
+  },
+  [types.OPEN_LOADING] (state, data) {
+    state.globalLoading = {
+      shown: true,
+      text: data && data.text ? data.text : ''
+    }
+    store.dispatch('contentBlur')
+  },
+  [types.CLOSE_LOADING] (state) {
+    state.globalLoading = {
+      shown: false,
+      text: ''
+    }
+    store.dispatch('contentFocus')
   }
+  // ,
+  // [types.CONTENT_BLUR] () {
+  //   const tabContent = document.querySelector('.md-tabs-content')
+  //   !tabContent.classList.contains('blur') && tabContent.classList.add('blur')
+  // },
+  // [types.CONTENT_FOCUS] () {
+  //   const tabContent = document.querySelector('.md-tabs-content')
+  //   tabContent.classList.contains('blur') && tabContent.classList.remove('blur')
+  // }
 }

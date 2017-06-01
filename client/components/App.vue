@@ -19,14 +19,24 @@
     <div id="global-alert-container">
       <com-alert></com-alert>
     </div>
+    <div id="global-confirm-container">
+      <com-confirm></com-confirm>
+    </div>
+    <div id="global-prompt-container">
+      <com-prompt></com-prompt>
+    </div>
+    <com-loading></com-loading>
   </div>
 </template>
 
 <script>
   const types = require('../store/mutation-types.js')
-  import ComTip from './ComTip.vue'
-  import ComDialog from './ComDialog.vue'
-  import ComAlert from './ComAlert.vue'
+  import ComTip from './utils/ComTip.vue'
+  import ComDialog from './utils/ComDialog.vue'
+  import ComAlert from './utils/ComAlert.vue'
+  import ComConfirm from './utils/ComConfirm.vue'
+  import ComPrompt from './utils/ComPrompt.vue'
+  import ComLoading from './utils/ComLoading.vue'
   export default {
     data () {
       return {
@@ -64,7 +74,10 @@
     components: {
       ComTip,
       ComDialog,
-      ComAlert
+      ComAlert,
+      ComConfirm,
+      ComPrompt,
+      ComLoading
     }
   }
 </script>
@@ -160,4 +173,11 @@
       }
     }
   }
+    .md-tabs-content {
+        &.blur {
+            -webkit-filter: blur(3px);
+            -ms-filter: blur(3px);
+            filter: blur(3px);
+        }
+    }
 </style>

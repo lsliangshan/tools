@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import * as types from '../store/mutation-types'
+  import * as types from '../../store/mutation-types'
   const Base64 = require('js-base64').Base64
   const Clipboard = require('Clipboard')
   export default {

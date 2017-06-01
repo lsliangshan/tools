@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import ComBase64 from '../../components/ComBase64.vue'
+  import ComBase64 from '../../components/pages/ComBase64.vue'
   export default {
     name: 'home',
     computed: {

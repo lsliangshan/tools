@@ -1,8 +1,8 @@
 <template>
-  <md-dialog ref="globalDialog" :md-click-outside-to-close="false" :md-open-from="globalDialog.from" :md-close-to="globalDialog.to">
+  <md-dialog ref="globalDialog" :md-click-outside-to-close="false" :md-open-from="globalDialog.from" :md-close-to="globalDialog.to" @open="onOpen" @close="onClose">
     <md-dialog-title v-text="globalDialog.title"></md-dialog-title>
 
-    <md-dialog-content v-html="globalDialog.content"></md-dialog-content>
+    <md-dialog-content v-html="globalDialog.content || globalDialog.contentHtml"></md-dialog-content>
 
     <md-dialog-actions>
       <md-button class="md-primary" v-if="!!globalDialog.cancelText" @click.native="cancel" v-text="globalDialog.cancelText"></md-button>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import * as types from '../store/mutation-types'
+  import * as types from '../../store/mutation-types'
   export default {
     computed: {
       globalDialog () {
@@ -31,6 +31,12 @@
       },
       closeDialog(ref) {
         this.$refs[ref].close();
+      },
+      onOpen() {
+        this.globalDialog.opened && this.globalDialog.opened()
+      },
+      onClose(type) {
+        this.globalDialog.closed && this.globalDialog.closed()
       },
       ok () {
         this.closeDialog('globalDialog')

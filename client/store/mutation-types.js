@@ -47,3 +47,18 @@ export const CLOSE_DIALOG = 'CLOSE_DIALOG'
 // Alert
 export const OPEN_ALERT = 'OPEN_ALERT'
 export const CLOSE_ALERT = 'CLOSE_ALERT'
+
+// Confirm
+export const OPEN_CONFIRM = 'OPEN_CONFIRM'
+export const CLOSE_CONFIRM = 'CLOSE_CONFIRM'
+
+// Prompt
+export const OPEN_PROMPT = 'OPEN_PROMPT'
+export const CLOSE_PROMPT = 'CLOSE_PROMPT'
+
+// Loading
+export const OPEN_LOADING = 'OPEN_LOADING'
+export const CLOSE_LOADING = 'CLOSE_LOADING'
+
+// export const CONTENT_BLUR = 'CONTENT_BLUR'
+// export const CONTENT_FOCUS = 'CONTENT_FOCUS'

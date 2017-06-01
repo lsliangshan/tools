@@ -55,7 +55,8 @@ Vue.material.registerTheme({
   },
   cyan: {
     primary: 'cyan',
-    accent: 'white'
+    accent: 'white',
+    warning: 'white'
   },
   red: {
     primary: 'red',
