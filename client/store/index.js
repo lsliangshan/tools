@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import * as actions from './actions'
 import * as getters from './getters'
 import * as mutations from './mutations'
+import * as utils from '../utils/index'
+
 const pkg = require('../../package')
 Vue.use(Vuex)
 
@@ -69,6 +71,13 @@ const state = {
     text: ''
   }
 }
+utils.ajax({
+  url: 'http://counter.sina.com.cn/ip',
+  methods: 'GET',
+  success: function (res) {
+    console.log('>>>>>>', res)
+  }
+})
 
 const store = new Vuex.Store({
   state,

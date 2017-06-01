@@ -1,5 +1,11 @@
 <template>
-  <transition name="global-loading-transitio"></transition>
+  <transition name="global-loading-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
+    <div id="global-loading-container" v-if="globalLoading.shown">
+      <div class="loading-container">
+        <md-spinner :md-size="60" md-indeterminate :md-theme="theme"></md-spinner>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -17,7 +23,7 @@
       if (!this.$store.hasOwnProperty('vms')) {
         this.$store.vms = {}
       }
-      this.$store.vms['globalAlert'] = this
+      this.$store.vms['globalLoading'] = this
     },
     methods: {
       openDialog(ref) {
@@ -27,14 +33,10 @@
         this.$refs[ref].close();
       },
       onOpen() {
-        this.globalAlert.opened && this.globalAlert.opened()
+        this.globalLoading.opened && this.globalLoading.opened()
       },
       onClose(type) {
-        this.globalAlert.closed && this.globalAlert.closed()
-      },
-      ok () {
-        this.closeDialog('globalAlert')
-        this.globalAlert.ok && this.globalAlert.ok()
+        this.globalLoading.closed && this.globalLoading.closed()
       }
     }
   }

@@ -70,3 +70,56 @@ export function getUUID (prefix) {
   const crc = bin2hex(bin.slice(-16, -12))
   return crc
 }
+
+function formatParams (data) {
+  var arr = []
+  for (var name in data) {
+    if (data.hasOwnProperty(name)) {
+      arr.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]))
+    }
+  }
+  arr.push(('v=' + Math.random()).replace('.', ''))
+  return arr.join('&')
+}
+/**
+ * js原生AJAX请求
+ * @param opts
+ */
+export function ajax (opts) {
+  opts = opts || {}
+  opts.method = (opts.method || 'GET').toUpperCase()
+  opts.dataType = opts.dataType || 'json'
+  var params = formatParams(opts.data)
+
+  var xhr
+  if (window.XMLHttpRequest) {
+    // 创建 非IE6
+    xhr = new window.XMLHttpRequest()
+  } else {
+    // 创建 IE6及其以下版本
+    xhr = new window.ActiveXObject('Microsoft.XMLHTTP')
+  }
+
+  // 连接http，发送数据
+  if (opts.method === 'GET') {
+    xhr.open('GET', opts.url + '?' + params, true)
+    xhr.send(null)
+  } else if (opts.method === 'POST') {
+    xhr.open('POST', opts.url, true)
+    // 设置表单提交时的内容类型
+    xhr.setRequestHeader('Content-Type', 'application/x-ww-form-urlencoded')
+    xhr.send(params)
+  }
+
+  // 接收返回数据
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+      var status = xhr.status
+      if (status >= 200 && status < 300) {
+        opts.success && opts.success(xhr.responseText, xhr.responseXML)
+      } else {
+        opts.fail && opts.fail(status)
+      }
+    }
+  }
+}

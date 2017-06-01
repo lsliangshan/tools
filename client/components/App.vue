@@ -13,18 +13,11 @@
     <div id="global-tip-container">
       <com-tip v-for="(value, item) in globalTips" :key="item" :data-id="item" :data-opts="globalTips[item]"></com-tip>
     </div>
-    <div id="global-dialog-container">
-      <com-dialog></com-dialog>
-    </div>
-    <div id="global-alert-container">
-      <com-alert></com-alert>
-    </div>
-    <div id="global-confirm-container">
-      <com-confirm></com-confirm>
-    </div>
-    <div id="global-prompt-container">
-      <com-prompt></com-prompt>
-    </div>
+
+    <com-dialog></com-dialog>
+    <com-alert></com-alert>
+    <com-confirm></com-confirm>
+    <com-prompt></com-prompt>
     <com-loading></com-loading>
   </div>
 </template>
