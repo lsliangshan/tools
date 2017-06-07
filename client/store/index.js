@@ -71,13 +71,13 @@ const state = {
     text: ''
   }
 }
-utils.ajax({
-  url: 'http://counter.sina.com.cn/ip',
-  methods: 'GET',
-  success: function (res) {
-    console.log('>>>>>>', res)
-  }
-})
+// utils.ajax({
+//   url: 'http://counter.sina.com.cn/ip',
+//   methods: 'GET',
+//   success: function (res) {
+//     console.log('>>>>>>', res)
+//   }
+// })
 
 const store = new Vuex.Store({
   state,

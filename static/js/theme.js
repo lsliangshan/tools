@@ -75,6 +75,6 @@ Vue.material.registerTheme({
       color: 'grey',
       hue: 800
     },
-    accent: 'white'
+    accent: 'grey'
   }
 })

@@ -10,12 +10,14 @@
       <!--<md-tab md-label="base64" md-tooltip="base64加解密">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
       <!--</md-tab>-->
+
+      <com-color></com-color>
       <com-base64></com-base64>
 
-      <md-tab md-icon="favorite">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>
-      </md-tab>
+      <!--<md-tab md-icon="favorite">-->
+        <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
+        <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
+      <!--</md-tab>-->
 
       <md-tab md-icon="near_me">
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>
@@ -26,6 +28,7 @@
 
 <script>
   import ComBase64 from '../../components/pages/ComBase64.vue'
+  import ComColor from '../../components/pages/ComColor.vue'
   export default {
     name: 'home',
     computed: {
@@ -45,7 +48,8 @@
       }
     },
     components: {
-      ComBase64
+      ComBase64,
+      ComColor
     }
   }
 </script>
