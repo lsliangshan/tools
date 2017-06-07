@@ -9,8 +9,17 @@
         <md-card-header>
           <div class="item">
             <md-input-container>
-              <label>输入颜色</label>
-              <md-input placeholder="输入颜色" v-model="formInfo.originValue"></md-input>
+              <div class="select-type">
+                <!--<label for="food">Food</label>-->
+                <md-select class="type-selector" v-model="selectedType" @change="changeSelectedType($event)">
+                  <!--<md-subheader>Fruits</md-subheader>-->
+                  <md-option v-for="(item, index) in allTypes" :key="item" :value="item">{{item}}</md-option>
+                </md-select>
+              </div>
+              <div class="input-color">
+                <!--<label>输入颜色</label>-->
+                <md-input placeholder="输入颜色" :value="formInfo.cacheOriginValue" @change="inputColor($event)"></md-input>
+              </div>
             </md-input-container>
             <div class="sample" :style="{backgroundColor: formInfo.originValue || theme}"></div>
           </div>
@@ -29,14 +38,9 @@
             <div class="item-content">
               <span class="mb5">darken</span>
               <div class="darken-value">
-                <vue-slider ref="slider" :real-time="true" v-bind="darkenOpts" v-model="darkenOpts.value"></vue-slider>
+                <vue-slider ref="slider" :real-time="true" v-bind="darkenOpts" v-model="darkenOpts.value" @callback="setDarken"></vue-slider>
               </div>
-            </div>
-            <div class="item-content">
-              <span class="mb5">lighten</span>
-              <div class="lighten-value">
-                <vue-slider ref="slider" :real-time="true" v-bind="lightenOpts" v-model="lightenOpts.value"></vue-slider>
-              </div>
+              <input type="number" :value="darkenOpts.value" @input="changeDarkenValue($event)">
             </div>
           </md-card-content>
         </md-card-expand>
@@ -44,17 +48,9 @@
     </div>
     <div class="output-box">
       <div class="md-subhead">输出</div>
-      <div class="output-item">
-        <span>Hex: </span>
-        <div class="value" v-text="outputColor.hex || ''"></div>
-      </div>
-      <div class="output-item">
-        <span>Rgb: </span>
-        <div class="value" v-text="outputColor.rgb || ''"></div>
-      </div>
-      <div class="output-item">
-        <span>Rgba: </span>
-        <div class="value" v-text="outputColor.rgba || ''"></div>
+      <div class="output-item" v-for="(item, index) in colorTypes" :key="item">
+        <span v-text="item + ':'"></span>
+        <div class="value" v-text="outputColor[item] || ''"></div>
       </div>
     </div>
   </md-tab>
@@ -68,19 +64,66 @@
     data () {
       return {
         formInfo: {
-          originValue: ''
-        }
+          originValue: '',
+          cacheOriginValue: ''
+        },
+        selectedType: '常规色值',
+        allTypes: ['常规色值', 'hsv', 'hsi', 'lab', 'lch', 'hcl', 'gl'],
+        colorTypes: ['hex', 'rgb', 'rgba', 'hsl', 'hsv', 'hsi', 'lab', 'lch', 'hcl', 'gl']
       }
     },
     computed: {
       outputColor () {
+        let _originValue = this.formInfo.cacheOriginValue
+        const _colorType = this.selectedType
+        switch (_colorType) {
+          case 'hsv':
+            _originValue = chroma.hsv(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case 'hsi':
+            _originValue = chroma.hsi(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case 'lab':
+            _originValue = chroma.lab(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case 'lch':
+            _originValue = chroma.lch(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case 'hcl':
+            _originValue = chroma.hcl(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case 'gl':
+            _originValue = chroma.gl(_originValue.split(',')).hex()
+//            this.inputColor(_originValue)
+            break
+          case '常规色值':
+            break
+          default :
+            break
+        }
+        this.formInfo.originValue = _originValue
+        console.log('+++++>>>>>>', _originValue)
+        const _theme = this.theme
         let out = {}
         try {
-          chroma(this.formInfo.originValue)
+//          chroma(this.formInfo.originValue)
           out = {
-            rgb: 'rgb(' + chroma(this.formInfo.originValue || this.theme).rgb().join(', ') + ')',
-            rgba: 'rgba(' + chroma(this.formInfo.originValue || this.theme).rgba().join(', ') + ')',
-            hex: chroma(this.formInfo.originValue || this.theme).hex()
+            hex: chroma(_originValue || _theme).hex(),
+            rgb: 'rgb(' + chroma(_originValue || _theme).rgb().join(', ') + ')',
+            rgba: 'rgba(' + chroma(_originValue || _theme).rgba().join(', ') + ')',
+            hsl: chroma(_originValue || _theme).css('hsl'),
+//            hsl: 'hsl(' + chroma(_originValue || _theme).hsl().join(', ') + ')',
+            hsv: chroma(_originValue || _theme).hsv(),
+            hsi: chroma(_originValue || _theme).hsi(),
+            lab: chroma(_originValue || _theme).lab(),
+            lch: chroma(_originValue || _theme).lch(),
+            hcl: chroma(_originValue || _theme).hcl(),
+            gl: chroma(_originValue || _theme).gl()
           }
         } catch (err) {
 
@@ -92,39 +135,8 @@
       },
       darkenOpts () {
         let opts = {
-          value: 1,
-          width: 280,
-          height: 8,
-          dotSize: 20,
-          min: 0,
-          max: 7.4,
-          interval: 0.1,
-          disabled: false,
-          show: true,
-          speed: 0.3,
-          reverse: false,
-          lazy: true,
-          tooltip: 'always',
-          piecewise: false,
-          formatter: '',
-          bgStyle: {
-            backgroundColor: '#fff',
-            boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)'
-          }
-        }
-        opts.processStyle = {
-          backgroundColor: this.theme
-        }
-        opts.tooltipStyle = {
-          backgroundColor: this.theme,
-          borderColor: this.theme
-        }
-        return opts
-      },
-      lightenOpts () {
-        let opts = {
-          value: 1,
-          width: 280,
+          value: 0,
+          width: 200,
           height: 8,
           dotSize: 20,
           min: 0,
@@ -157,8 +169,63 @@
 
     },
     methods: {
+      changeSelectedType (target) {
+        const that = this
+        let _originValue = this.formInfo.cacheOriginValue
+        switch (target) {
+          case 'hsv':
+            _originValue = chroma.hsv(_originValue.split(',')).hex()
+            break
+          case 'hsi':
+            _originValue = chroma.hsi(_originValue.split(',')).hex()
+            break
+          case 'lab':
+            _originValue = chroma.lab(_originValue.split(',')).hex()
+            break
+          case 'lch':
+            _originValue = chroma.lch(_originValue.split(',')).hex()
+            break
+          case 'hcl':
+            _originValue = chroma.hcl(_originValue.split(',')).hex()
+            break
+          case 'gl':
+            _originValue = chroma.gl(_originValue.split(',')).hex()
+            break
+          case '常规色值':
+            break
+          default :
+            break
+        }
+        console.log('======== target: ', _originValue)
+        setTimeout(function () {
+          that.formInfo.originValue = _originValue
+        }, 50)
+      },
+      inputColor (val) {
+        this.formInfo.originValue = val
+        this.formInfo.cacheOriginValue = val
+      },
+      changeDarkenValue (target) {
+        if (Number(target.target.value) >= 0 && Number(target.target.value) <= 7.4) {
+          this.darkenOpts.value = Number(target.target.value)
+          this.setDarken()
+        } else {
+          if (Number(target.target.value) < 0) {
+            target.target.value = 0
+          } else if (Number(target.target.value) > 7.4) {
+            target.target.value = 7.4
+          }
+        }
+      },
       darken (color, value) {
         return chroma(color).darken(value).hex()
+      },
+      setDarken () {
+        const that = this
+        let darkenTimeout = setTimeout(function () {
+          that.formInfo.originValue = chroma(that.formInfo.cacheOriginValue).darken(that.darkenOpts.value).hex()
+          clearTimeout(darkenTimeout)
+        }, 10)
       }
     },
     components: {
@@ -201,12 +268,23 @@
           max-width: 280px;
           margin-bottom: 0;
         }
+        .type-selector {
+          min-width: 90px;
+          text-align: center!important;
+        }
+        .input-color {
+          margin-left: 15px;
+        }
       }
       .md-card-content {
         .item-content {
           display: flex;
           align-items: flex-end;
           justify-content: space-between;
+          input {
+            width: 80px;
+            margin-bottom: 5px;
+          }
         }
       }
     }
@@ -217,7 +295,7 @@
   .output-box {
     position: absolute;
     right: 0;
-    top: 100px;
+    top: 10px;
     width: 250px;
     height: auto;
     min-height: 100px;
@@ -233,7 +311,10 @@
       align-items: center;
       justify-content: flex-start;
       span {
-        width: 60px;
+        width: 40px;
+      }
+      .value {
+        text-align: center;
       }
     }
   }
