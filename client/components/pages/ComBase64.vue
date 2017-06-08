@@ -49,7 +49,7 @@
 <script>
   import * as types from '../../store/mutation-types'
   const Base64 = require('js-base64').Base64
-  const Clipboard = require('Clipboard')
+  const Clipboard = require('clipboard')
   export default {
     data () {
       return {
