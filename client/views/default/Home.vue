@@ -5,7 +5,8 @@
         <md-icon>menu</md-icon>
       </md-button>
     </div>
-    <h2 class="md-title app-name" v-text="appName"></h2>
+    <img class="logo" src="../../../static/img/logo01.PNG">
+    <!--<h2 class="md-title app-name" v-text="appName"></h2>-->
     <md-tabs :md-theme="theme" md-right md-elevation="10">
       <!--<md-tab md-label="base64" md-tooltip="base64加解密">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
@@ -58,10 +59,17 @@
   .page {
     width: 100%;
     height: 100%;
+    .logo {
+      position: absolute;
+      left: 52px;
+      top: 0;
+      height: 48px;
+      z-index: 99;
+    }
     .app-name {
       flex: 1;
       position: absolute;
-      left: 52px;
+      left: 160px;
       top: 0;
       color: #fff;
       z-index: 99;
