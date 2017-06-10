@@ -107,7 +107,6 @@
             break
         }
         this.formInfo.originValue = _originValue
-        console.log('+++++>>>>>>', _originValue)
         const _theme = this.theme
         let out = {}
         try {
