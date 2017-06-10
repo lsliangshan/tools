@@ -26,10 +26,10 @@
         </md-card-header>
 
         <md-card-expand>
-          <md-card-actions>
+          <md-card-actions :class="selectedType!='常规色值'?'disabled':''">
             <span>高级选项</span>
             <span style="flex: 1"></span>
-            <md-button class="md-icon-button" md-expand-trigger>
+            <md-button class="md-icon-button" md-expand-trigger :class="selectedType=='常规色值'?'':'pen'">
               <md-icon class="cp">keyboard_arrow_down</md-icon>
             </md-button>
           </md-card-actions>
@@ -196,7 +196,6 @@
           default :
             break
         }
-        console.log('======== target: ', _originValue)
         setTimeout(function () {
           that.formInfo.originValue = _originValue
         }, 50)
@@ -287,6 +286,16 @@
           }
         }
       }
+      .md-card-actions {
+        &.disabled {
+          color: #bbb!important;
+          cursor: not-allowed!important;
+          i {
+            color: #bbb!important;
+            cursor: not-allowed!important;
+          }
+        }
+      }
     }
   }
   .darken-value, .lighten-value {
@@ -329,5 +338,8 @@
   }
   .mb5 {
     margin-bottom: 5px;
+  }
+  .pen {
+    pointer-events: none;
   }
 </style>
