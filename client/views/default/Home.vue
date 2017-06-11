@@ -12,8 +12,8 @@
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
       <!--</md-tab>-->
 
-      <com-color></com-color>
       <com-base64></com-base64>
+      <com-color></com-color>
 
       <!--<md-tab md-icon="favorite">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
