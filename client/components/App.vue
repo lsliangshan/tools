@@ -79,6 +79,7 @@
   @import "../../static/css/main.css";
   @import "../../static/css/vue-material.css";
   @import "../../static/css/animate.min.css";
+  @import "../../static/css/font-awesome/css/font-awesome.min.css";
 
   #app {
     width: 100%;

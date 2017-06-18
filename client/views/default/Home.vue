@@ -12,6 +12,7 @@
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
       <!--</md-tab>-->
 
+      <com-json></com-json>
       <com-base64></com-base64>
       <com-color></com-color>
 
@@ -20,9 +21,9 @@
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
       <!--</md-tab>-->
 
-      <md-tab md-icon="near_me">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>
-      </md-tab>
+      <!--<md-tab md-icon="near_me">-->
+        <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas.</p>-->
+      <!--</md-tab>-->
     </md-tabs>
   </div>
 </template>
@@ -30,6 +31,7 @@
 <script>
   import ComBase64 from '../../components/pages/ComBase64.vue'
   import ComColor from '../../components/pages/ComColor.vue'
+  import ComJson from '../../components/pages/ComJson.vue'
   export default {
     name: 'home',
     computed: {
@@ -50,7 +52,8 @@
     },
     components: {
       ComBase64,
-      ComColor
+      ComColor,
+      ComJson
     }
   }
 </script>

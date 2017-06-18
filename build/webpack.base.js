@@ -47,11 +47,15 @@ module.exports = {
         loaders: ['babel-loader']
       },
       {
-        test: /\.(ico|jpg|png|PNG|gif|eot|otf|webp|ttf|woff|woff2)(\?.*)?$/,
+        test: /\.(ico|jpg|png|PNG|gif)(\?.*)?$/,
         loader: 'file-loader',
         query: {
           name: 'static/media/[name].[hash:8].[ext]'
         }
+      },
+      {
+        test: /\.(ttf|eot|woff|woff2)$/,
+        loader: 'file-loader?name=fonts/[name].[ext]'
       },
       {
         test: /\.svg$/,
