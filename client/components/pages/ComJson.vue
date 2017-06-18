@@ -121,10 +121,10 @@
         this.srcContainerShown = !this.srcContainerShown
       },
       expandAll () {
-        new JSONFormat(this.currentJsonStr, 4).showAll()
+        this.currentJsonStr.trim() !== '' && (new JSONFormat(this.currentJsonStr, 4).showAll())
       },
       compressAll () {
-        new JSONFormat(this.currentJsonStr, 4).hideAll()
+        this.currentJsonStr.trim() !== '' && (new JSONFormat(this.currentJsonStr, 4).hideAll())
       }
     }
   }

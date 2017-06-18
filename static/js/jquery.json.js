@@ -13,7 +13,6 @@ var JSONFormat = window.JSONFormat = (function(){
 
   var last_html = '';
   var hide = window.hide = function (obj) {
-    console.log('..... hide .....', obj)
     var data_type = obj.parentNode.getAttribute('data-type');
     var data_size = obj.parentNode.getAttribute('data-size');
     obj.parentNode.setAttribute('data-inner',obj.parentNode.innerHTML);
