@@ -16,7 +16,8 @@ module.exports = {
     publicPath: config.publicPath
   },
   performance: {
-    hints: process.env.NODE_ENV === 'production' ? 'warning' : false
+    hints: false
+    // hints: process.env.NODE_ENV === 'production' ? 'warning' : false
   },
   resolve: {
     extensions: ['.js', '.vue', '.css', '.json'],
