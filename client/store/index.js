@@ -14,6 +14,7 @@ const noop = function () {}
 const state = {
   appName: pkg.name,
   theme: 'black',
+  musicBoxAnimationId: 0,
   showMask: false,
   globalTips: {},
   globalDialog: {
