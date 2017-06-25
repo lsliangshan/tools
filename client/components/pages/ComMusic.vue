@@ -28,12 +28,44 @@
                   <vue-slider ref="slider" :real-time="true" v-bind="musicControl.currentTime" v-model="musicControl.currentTime.value" @callback="setCurrentTime"></vue-slider>
                 </div>
                 <div class="time">
-                  <span v-format-time="musicControl.currentTime.value"></span>
+                  <span class="current-time" v-format-time="musicControl.currentTime.value"></span>
                   /
-                  <span v-format-time="musicControl.duration"></span>
+                  <span class="duration" v-format-time="musicControl.duration"></span>
                 </div>
               </div>
             </div>
+            <a href="javascript:" class="music-btn" :class="audioMuted ? 'volume-muted' : 'volume'" @click="toggleVolumeSettings($event)" title="设置音量">
+              <transition name="volume-settings-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
+                <div class="volume-settings" v-if="musicControl.showVolumeSettings">
+                  <vue-slider ref="volumeSlider" :real-time="true" v-bind="musicControl.volume" v-model="musicControl.volume.value" @callback="setVolume"></vue-slider>
+                </div>
+              </transition>
+            </a>
+            <a href="javascript:" class="music-btn loop-one" v-if="musicControl.loop==0" :data-value="musicControl.loop" @click="setLoop($event)" title="单曲循环"></a>
+            <a href="javascript:" class="music-btn loop-all" v-if="musicControl.loop==1" :data-value="musicControl.loop" @click="setLoop($event)" title="循环"></a>
+            <a href="javascript:" class="music-btn loop-shuffle" v-if="musicControl.loop==2" :data-value="musicControl.loop" @click="setLoop($event)" title="随机"></a>
+            <a href="javascript:" class="music-btn list" title="播放列表" @click="toggleMusicList($event)">
+              <span class="pen" v-text="musics.length"></span>
+              <transition name="music-list-container-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
+                <div class="music-list-container" v-if="showMusicListContainer">
+                  <div class="list-header">
+                    播放列表（<span v-text="musics.length"></span>）
+                    <div class="close" @click="closeMusicList">×</div>
+                  </div>
+                  <div class="list-main">
+                    <div class="list-item" v-for="(item, index) in musics" :key="item" :data-index="index" @click="playMusic($event)" :class="currentMusicIndex==index ? 'active' : ''">
+                      <transition name="play-icon-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
+                        <div class="play-icon">
+                          <i v-if="currentMusicIndex == index" class="fa fa-fw fa-play"></i>
+                        </div>
+                      </transition>
+                      <div class="name" v-text="item.name"></div>
+                      <div class="author" v-text="item.author"></div>
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </a>
           </div>
         </div>
       </md-toolbar>
@@ -68,16 +100,143 @@
             poster: 'http://imgcache.qq.com/music/photo/album_300/28/300_albumpic_1211728_0.jpg'
           },
           {
-            name: '4. 追梦赤子心',
-            author: 'Gala',
-            url: 'http://101.28.249.61/m10.music.126.net/20170625005530/a43bccec9ec8be732100253b3012f6d5/ymusic/ad19/f12c/9667/81b242ff2fa56e002c950f88e88162ac.mp3?wshc_tag=1&wsts_tag=594e93a7&wsid_tag=7b7b414f&wsiphost=ipdbm',
-            poster: 'http://imgcache.qq.com/music/photo/singer/90/180_singerpic_4190_0.jpg'
+            name: '4. 逆流成河',
+            author: '金南玲',
+            url: 'http://fs.web.kugou.com/a24f1725728a18c99d5d50c338097e9e/594f1c05/G014/M0B/18/1F/roYBAFUPcU-ARySKAB6UkcwIEo0179.mp3',
+            poster: 'http://imge.kugou.com/stdmusic/20150715/20150715201344601548.jpg'
+          },
+          {
+            name: '1. 演员',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100001Qu4I30eVFYb.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
+          },
+          {
+            name: '2. 丑八怪',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100000QwTVo0YHdcP.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/91/300_albumpic_443691_0.jpg'
+          },
+          {
+            name: '3. Faded',
+            author: 'Alan Walker',
+            url: 'http://cc.stream.qqmusic.qq.com/C100002NkERn2LNVI4.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/28/300_albumpic_1211728_0.jpg'
+          },
+          {
+            name: '4. 逆流成河',
+            author: '金南玲',
+            url: 'http://fs.web.kugou.com/a24f1725728a18c99d5d50c338097e9e/594f1c05/G014/M0B/18/1F/roYBAFUPcU-ARySKAB6UkcwIEo0179.mp3',
+            poster: 'http://imge.kugou.com/stdmusic/20150715/20150715201344601548.jpg'
+          },
+          {
+            name: '1. 演员',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100001Qu4I30eVFYb.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
+          },
+          {
+            name: '2. 丑八怪',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100000QwTVo0YHdcP.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/91/300_albumpic_443691_0.jpg'
+          },
+          {
+            name: '3. Faded',
+            author: 'Alan Walker',
+            url: 'http://cc.stream.qqmusic.qq.com/C100002NkERn2LNVI4.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/28/300_albumpic_1211728_0.jpg'
+          },
+          {
+            name: '4. 逆流成河',
+            author: '金南玲',
+            url: 'http://fs.web.kugou.com/a24f1725728a18c99d5d50c338097e9e/594f1c05/G014/M0B/18/1F/roYBAFUPcU-ARySKAB6UkcwIEo0179.mp3',
+            poster: 'http://imge.kugou.com/stdmusic/20150715/20150715201344601548.jpg'
+          },
+          {
+            name: '1. 演员',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100001Qu4I30eVFYb.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
+          },
+          {
+            name: '2. 丑八怪',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100000QwTVo0YHdcP.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/91/300_albumpic_443691_0.jpg'
+          },
+          {
+            name: '3. Faded',
+            author: 'Alan Walker',
+            url: 'http://cc.stream.qqmusic.qq.com/C100002NkERn2LNVI4.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/28/300_albumpic_1211728_0.jpg'
+          },
+          {
+            name: '4. 逆流成河',
+            author: '金南玲',
+            url: 'http://fs.web.kugou.com/a24f1725728a18c99d5d50c338097e9e/594f1c05/G014/M0B/18/1F/roYBAFUPcU-ARySKAB6UkcwIEo0179.mp3',
+            poster: 'http://imge.kugou.com/stdmusic/20150715/20150715201344601548.jpg'
+          },
+          {
+            name: '1. 演员',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100001Qu4I30eVFYb.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
+          },
+          {
+            name: '2. 丑八怪',
+            author: '薛之谦',
+            url: 'http://cc.stream.qqmusic.qq.com/C100000QwTVo0YHdcP.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/91/300_albumpic_443691_0.jpg'
+          },
+          {
+            name: '3. Faded',
+            author: 'Alan Walker',
+            url: 'http://cc.stream.qqmusic.qq.com/C100002NkERn2LNVI4.m4a',
+            poster: 'http://imgcache.qq.com/music/photo/album_300/28/300_albumpic_1211728_0.jpg'
+          },
+          {
+            name: '4. 逆流成河',
+            author: '金南玲',
+            url: 'http://fs.web.kugou.com/a24f1725728a18c99d5d50c338097e9e/594f1c05/G014/M0B/18/1F/roYBAFUPcU-ARySKAB6UkcwIEo0179.mp3',
+            poster: 'http://imge.kugou.com/stdmusic/20150715/20150715201344601548.jpg'
           }
         ],
-        currentMusicIndex: 1,
+        currentMusicIndex: Math.floor(Math.random() * 4),
         musicControl: {
           interval: null,
           play: true,
+          showVolumeSettings: false,
+          volume: {
+            value: 0,
+            width: 4,
+            height: 113,
+            dotSize: 10,
+            direction: 'vertical',
+            tooltipDir: 'right',
+            reverse: true,
+            min: 0,
+            max: 100,
+            interval: 1,
+            disabled: false,
+            show: true,
+            speed: 0.3,
+            lazy: true,
+            tooltip: 'always',
+            piecewise: false,
+            formatter: '',
+            bgStyle: {
+              backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              boxShadow: 'inset 0.5px 0.5px 3px 1px rgba(0,0,0,.3)'
+            },
+            tooltipStyle: {
+              backgroundColor: '#42b983',
+              border: '#42b983'
+            },
+            processStyle: {
+              "backgroundColor": "#42b983"
+            }
+          },
 //          currentTime: 0,   // 设置或返回音频中的当前播放位置（以秒计）。
           duration: 0,      // 返回音频的长度（以秒计）。
           currentTime: {
@@ -104,9 +263,10 @@
               "backgroundColor": "#42b983"
             }
           },
-          loop: 1  // 循环方式。1：单曲重复；2：列表重复；3：随机播放
+          loop: 0  // 循环方式。0：单曲重复；1：列表重复；2：随机播放
         },
-        showMusicContainer: false
+        showMusicContainer: false,
+        showMusicListContainer: false
       }
     },
     computed: {
@@ -115,12 +275,32 @@
       },
       musicInfo () {
         return this.musics[this.currentMusicIndex]
+      },
+      audioMuted () {
+        return Number(this.musicControl.volume.value) === 0
       }
     },
     mounted () {
       this.musicInfo = Object.assign(this.musicInfo, this.musics[this.currentMusicIndex])
     },
     methods: {
+      toggleVolumeSettings (target) {
+        if (target.target.classList.contains('volume') || target.target.classList.contains('volume-muted')) {
+          this.musicControl.showVolumeSettings = !this.musicControl.showVolumeSettings
+        }
+      },
+      setVolume () {
+        const that = this
+        setTimeout(function () {
+          that.$refs.bgMusic.volume = parseFloat(that.musicControl.volume.value / 100)
+        }, 10)
+      },
+      setLoop (target) {
+        this.musicControl.loop = (Number(target.target.dataset.value) + 1) % 3
+      },
+      playMusic (target) {
+        this.currentMusicIndex = Number(target.target.dataset.index)
+      },
       play () {
         this.musicControl.play = true
         this.$refs.bgMusic.play()
@@ -135,23 +315,20 @@
         } else {
           this.play()
         }
-//        this.$refs.bgMusic.isPaused ? this.$refs.bgMusic.play() : this.$refs.bgMusic.pause()
-//        this.musicControl.play = !this.musicControl.play
       },
       setCurrentTime () {
         const that = this
         setTimeout(function () {
-          console.log(that.musicControl.currentTime.value)
           that.$refs.bgMusic.currentTime = that.musicControl.currentTime.value
         }, 10)
       },
       playNext () {
         switch (this.musicControl.loop) {
+          case 0:
           case 1:
-          case 2:
             this.currentMusicIndex = (this.currentMusicIndex + 1) % this.musics.length
             break
-          case 3:
+          case 2:
             this.currentMusicIndex = Math.floor(Math.random() * this.musics.length)
             break
           default:
@@ -160,11 +337,11 @@
       },
       playPrev () {
         switch (this.musicControl.loop) {
+          case 0:
           case 1:
-          case 2:
             this.currentMusicIndex = (this.currentMusicIndex + this.musics.length - 1) % this.musics.length
             break
-          case 3:
+          case 2:
             this.currentMusicIndex = Math.floor(Math.random() * this.musics.length)
             break
           default:
@@ -173,13 +350,12 @@
       },
       afterPlayEnd () {
         switch (this.musicControl.loop) {
-          case 1:
-            this.$refs.bgMusic.play()
+          case 0:
             break
-          case 2:
+          case 1:
             this.currentMusicIndex = (this.currentMusicIndex + 1) % this.musics.length
             break
-          case 3:
+          case 2:
             this.currentMusicIndex = Math.floor(Math.random() * this.musics.length)
             break
           default:
@@ -191,6 +367,15 @@
       },
       closeMusicContainer () {
         this.showMusicContainer = false
+      },
+      toggleMusicList (target) {
+        console.log('....', target)
+        if (target.target.classList.contains('list')) {
+          this.showMusicListContainer = !this.showMusicListContainer
+        }
+      },
+      closeMusicList () {
+        this.showMusicListContainer = false
       }
     },
     directives: {
@@ -217,6 +402,45 @@
         }
       },
       'musicLoaded': {
+        inserted: function (el, binding, vnode) {
+          el.onloadstart = function (ev) {
+            console.log('load start: ', ev)
+          }
+          el.ondurationchange = function (ev) {
+            console.log('duration change: ', ev)
+          }
+          el.onloadedmetadata = function (ev) {
+            console.log('loaded meta data: ', ev)
+          }
+          el.onloadeddata = function (ev) {
+            console.log('loaded data: ', ev)
+          }
+          el.onprogress = function (ev) {
+            console.log('on progress: ', ev)
+          }
+          el.oncanplay = function (ev) {
+            if (!!vnode.context.musicControl.interval) {
+              clearInterval(vnode.context.musicControl.interval)
+            }
+            vnode.context.musicControl.currentTime.value = parseInt(ev.target.currentTime)
+            vnode.context.musicControl.interval = setInterval(function () {
+              vnode.context.musicControl.currentTime.value = parseInt(ev.target.currentTime)
+            }, 1000)
+            let _duration = parseInt(ev.target.duration)
+            vnode.context.musicControl.currentTime.max = _duration
+            vnode.context.musicControl.duration = _duration
+            vnode.context.musicControl.volume.value = parseInt(ev.target.volume * 100)
+            vnode.context.musicControl.play = !ev.target.paused
+            console.log('can play: ', ev)
+          }
+          el.oncanplaythrough = function (ev) {
+            console.log('can play through: ', ev)
+          }
+          el.onended = function (ev) {
+            console.log('播放结束!')
+            vnode.context.afterPlayEnd()
+          }
+        },
         componentUpdated: function (el, binding, vnode) {
           el.onloadstart = function (ev) {
             console.log('load start: ', ev)
@@ -244,6 +468,8 @@
             let _duration = parseInt(ev.target.duration)
             vnode.context.musicControl.currentTime.max = _duration
             vnode.context.musicControl.duration = _duration
+            vnode.context.musicControl.volume.value = parseInt(ev.target.volume * 100)
+            vnode.context.musicControl.play = !ev.target.paused
             console.log('can play: ', ev)
           }
           el.oncanplaythrough = function (ev) {
@@ -252,6 +478,7 @@
           el.onended = function (ev) {
             console.log('播放结束!')
             vnode.context.afterPlayEnd()
+            vnode.context.$refs.bgMusic.play()
           }
         }
       },
@@ -284,7 +511,9 @@
     width: 36px;
     height: 36px;
     margin-top: 0;
-
+  }
+  .pen {
+    pointer-events: none;
   }
   #music-box {
     position: absolute;
@@ -337,6 +566,7 @@
         .music-info {
           position: absolute;
           left: 0;
+          text-shadow: 0 1px 0 #171717;
         }
       }
     }
@@ -355,6 +585,7 @@
         font-size: 24px;
         cursor: pointer;
         right: 10px;
+        color: #999;
       }
       .main {
         width: 100%;
@@ -381,21 +612,21 @@
               background-position: -30px -130px;
             }
           }
-          .play {
+          a.play {
             background-position: 0 -204px;
             margin: 0 8px;
             &:hover {
               background-position: -40px -204px;
             }
           }
-          .pause {
+          a.pause {
             background-position: 0 -165px;
             margin: 0 8px;
             &:hover {
               background-position: -40px -165px;
             }
           }
-          .next {
+          a.next {
             width: 28px;
             height: 28px;
             background-position: -80px -130px;
@@ -426,6 +657,7 @@
               font-size: 12px;
               top: 0;
               line-height: 30px;
+              text-shadow: 0 1px 0 #171717;
               .name {
                 display: inline-block;
                 color: #e8e8e8;
@@ -454,6 +686,168 @@
               .time {
                 margin-left: 8px;
                 margin-top: -5px;
+                color: #797979;
+                text-shadow: 0 1px 0 #121212;
+                .current-time {
+                  color: #a1a1a1;
+                }
+                .duration {
+                  color: #797979;
+                }
+              }
+            }
+          }
+          a.volume, a.volume-muted {
+            position: relative;
+            width: 25px;
+            height: 25px;
+            .volume-settings {
+              position: absolute;
+              width: 32px;
+              /*height: 113px;*/
+              left: -3.5px;
+              top: 44px;
+              padding: 8px 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background-color: rgba(66, 66, 66, 0.96);
+            }
+          }
+          a.volume {
+            background-position: -2px -248px;
+            &:hover {
+              background-position: -31px -248px;
+            }
+          }
+          a.volume-muted {
+            background-position: -104px -69px;
+            &:hover {
+              background-position: -126px -69px;
+            }
+          }
+          a.loop-all {
+            width: 25px;
+            height: 25px;
+            background-position: -3px -344px;
+            margin-left: 8px;
+            &:hover {
+              background-position: -33px -344px;
+            }
+          }
+          a.loop-shuffle {
+            width: 25px;
+            height: 25px;
+            margin-left: 8px;
+            background-position: -66px -248px;
+            &:hover {
+              background-position: -93px -248px;
+            }
+          }
+          a.loop-one {
+            width: 25px;
+            height: 25px;
+            margin-left: 8px;
+            background-position: -66px -344px;
+            &:hover {
+              background-position: -93px -344px;
+            }
+          }
+          a.list {
+            position: relative;
+            width: 58px;
+            height: 25px;
+            padding-left: 21px;
+            margin-left: 8px;
+            background-position: -42px -68px;
+            line-height: 27px;
+            text-align: center;
+            color: #666;
+            text-shadow: 0 1px 0 #080707;
+            text-indent: 0;
+            text-decoration: none;
+            &:hover {
+              background-position: -42px -98px;
+            }
+            .music-list-container {
+              position: fixed;
+              width: 500px;
+              height: 350px;
+              right: 0;
+              top: 44px;
+              cursor: auto;
+              border: 1px solid rgba(0, 0, 0, 0.3);
+              background-color: #424242;
+              -moz-user-select:none;
+              -webkit-user-select:none;
+              user-select:none;
+              .list-header {
+                position: relative;
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                color: #ffffff;
+                text-align: left;
+                padding-left: 15px;
+                font-weight: bold;
+                background-color: #333;
+                cursor: auto;
+                text-shadow: 0 1px 0 #000;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+                .close {
+                  position: absolute;
+                  top: 0;
+                  font-weight: normal;
+                  color: #999;
+                }
+              }
+              .list-main {
+                width: 100%;
+                height: 298px;
+                margin: 5px 0;
+                overflow-x: hidden;
+                overflow-y: auto;
+                .list-item {
+                  width: 100%;
+                  text-align: left;
+                  padding: 0 15px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  color: #ddd;
+                  &:hover {
+                    background-color: #333;
+                    color: #42b983;
+                  }
+                  &.active {
+                    background-color: #333;
+                    color: #42b983;
+                  }
+                  .play-icon {
+                    pointer-events: none;
+                    width: 20px;
+                    text-align: center;
+                  }
+                  .name {
+                    width: 60%;
+                    padding: 0 5px;
+                    text-align: left;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    pointer-events: none;
+                  }
+                  .author {
+                    width: calc(40% - 20px);
+                    text-align: right;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    word-wrap: normal;
+                    pointer-events: none;
+                  }
+                }
               }
             }
           }
