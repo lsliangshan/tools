@@ -38,6 +38,9 @@ import * as types from './mutation-types'
 import * as utils from '../utils/index'
 
 export const mutations = {
+  [types.SET_THEME] (state, data) {
+    state.theme = data.theme
+  },
   [types.NEED_MASK] (state, data) {
     state.showMask = data.shown
   },

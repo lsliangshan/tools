@@ -33,6 +33,8 @@
 /**
  * Created by liangshan on 2017/5/16.
  */
+export const SET_THEME = 'SET_THEME'
+
 export const NEED_MASK = 'NEED_MASK'
 
 // 新增一个全局tip
