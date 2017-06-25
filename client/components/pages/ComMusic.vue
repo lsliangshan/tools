@@ -53,14 +53,18 @@
                     <div class="close" @click="closeMusicList">×</div>
                   </div>
                   <div class="list-main">
-                    <div class="list-item" v-for="(item, index) in musics" :key="item" :data-index="index" @click="playMusic($event)" :class="currentMusicIndex==index ? 'active' : ''">
+                    <div class="list-item" v-for="(item, index) in musics" :key="item" :data-index="index" @click="playMusic($event)" :class="currentMusicIndex==index ? 'active' : ''" @mouseenter="showListOperation($event)" @mouseleave="hideListOperation($event)">
                       <transition name="play-icon-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
                         <div class="play-icon">
                           <i v-if="currentMusicIndex == index" class="fa fa-fw fa-play"></i>
                         </div>
                       </transition>
                       <div class="name" v-text="item.name"></div>
+                      <div class="operation">
+                        <!--<i v-if="showMusicListOperation == index && musics.length > 1" class="fa fa-fw fa-trash remove-music" @click="removeMusic($event, index)"></i>-->
+                      </div>
                       <div class="author" v-text="item.author"></div>
+                      <div class="duration" v-get-audio-duration="item.url"></div>
                     </div>
                   </div>
                 </div>
@@ -266,7 +270,8 @@
           loop: 0  // 循环方式。0：单曲重复；1：列表重复；2：随机播放
         },
         showMusicContainer: false,
-        showMusicListContainer: false
+        showMusicListContainer: false,
+        showMusicListOperation: -1
       }
     },
     computed: {
@@ -369,13 +374,31 @@
         this.showMusicContainer = false
       },
       toggleMusicList (target) {
-        console.log('....', target)
         if (target.target.classList.contains('list')) {
           this.showMusicListContainer = !this.showMusicListContainer
         }
       },
       closeMusicList () {
         this.showMusicListContainer = false
+      },
+      showListOperation (target) {
+        this.showMusicListOperation = Number(target.target.dataset.index)
+      },
+      hideListOperation () {
+        this.showMusicListOperation = -1
+      },
+      removeMusic (target, index) {
+        if (target.target.classList.contains('remove-music')) {
+          target.stopPropagation()
+          if (Number(index) === this.musics.length - 1) {
+            this.currentMusicIndex = this.musics.length - 2
+          } else {
+            if (this.musics.length > 1 && index < this.currentMusicIndex) {
+              this.currentMusicIndex -= 1
+            }
+          }
+          this.musics.splice(index, 1)
+        }
       }
     },
     directives: {
@@ -404,19 +427,14 @@
       'musicLoaded': {
         inserted: function (el, binding, vnode) {
           el.onloadstart = function (ev) {
-            console.log('load start: ', ev)
           }
           el.ondurationchange = function (ev) {
-            console.log('duration change: ', ev)
           }
           el.onloadedmetadata = function (ev) {
-            console.log('loaded meta data: ', ev)
           }
           el.onloadeddata = function (ev) {
-            console.log('loaded data: ', ev)
           }
           el.onprogress = function (ev) {
-            console.log('on progress: ', ev)
           }
           el.oncanplay = function (ev) {
             if (!!vnode.context.musicControl.interval) {
@@ -431,31 +449,23 @@
             vnode.context.musicControl.duration = _duration
             vnode.context.musicControl.volume.value = parseInt(ev.target.volume * 100)
             vnode.context.musicControl.play = !ev.target.paused
-            console.log('can play: ', ev)
           }
           el.oncanplaythrough = function (ev) {
-            console.log('can play through: ', ev)
           }
           el.onended = function (ev) {
-            console.log('播放结束!')
             vnode.context.afterPlayEnd()
           }
         },
         componentUpdated: function (el, binding, vnode) {
           el.onloadstart = function (ev) {
-            console.log('load start: ', ev)
           }
           el.ondurationchange = function (ev) {
-            console.log('duration change: ', ev)
           }
           el.onloadedmetadata = function (ev) {
-            console.log('loaded meta data: ', ev)
           }
           el.onloadeddata = function (ev) {
-            console.log('loaded data: ', ev)
           }
           el.onprogress = function (ev) {
-            console.log('on progress: ', ev)
           }
           el.oncanplay = function (ev) {
             if (!!vnode.context.musicControl.interval) {
@@ -470,13 +480,10 @@
             vnode.context.musicControl.duration = _duration
             vnode.context.musicControl.volume.value = parseInt(ev.target.volume * 100)
             vnode.context.musicControl.play = !ev.target.paused
-            console.log('can play: ', ev)
           }
           el.oncanplaythrough = function (ev) {
-            console.log('can play through: ', ev)
           }
           el.onended = function (ev) {
-            console.log('播放结束!')
             vnode.context.afterPlayEnd()
             vnode.context.$refs.bgMusic.play()
           }
@@ -490,6 +497,17 @@
         componentUpdated: function (el, binding, vnode) {
           let _value = parseFloat(binding.value)
           el.innerHTML = (parseInt(_value / 60) < 10 ? ('0' + parseInt(_value / 60)) : parseInt(_value / 60)) + ':' + ((_value % 60) < 10 ? ('0' + (_value % 60)) : (_value % 60))
+        }
+      },
+      'getAudioDuration': {
+        inserted: function (el, binding, vnode) {
+          let _audio = document.createElement('audio')
+          _audio.src = binding.value
+          _audio.oncanplay = function (ev) {
+            el.innerHTML = ev.target.duration
+            let _value = parseInt(ev.target.duration)
+            el.innerHTML = (parseInt(_value / 60) < 10 ? ('0' + parseInt(_value / 60)) : parseInt(_value / 60)) + ':' + ((_value % 60) < 10 ? ('0' + (_value % 60)) : (_value % 60))
+          }
         }
       }
     },
@@ -823,13 +841,21 @@
                     background-color: #333;
                     color: #42b983;
                   }
+                  .operation {
+                    width: 90px;
+                    display: inline-flex;
+                    justify-content: flex-end;
+                    i {
+                      pointer-events: auto;
+                    }
+                  }
                   .play-icon {
                     pointer-events: none;
                     width: 20px;
                     text-align: center;
                   }
                   .name {
-                    width: 60%;
+                    width: calc(60% - 90px);
                     padding: 0 5px;
                     text-align: left;
                     overflow: hidden;
@@ -839,13 +865,18 @@
                     pointer-events: none;
                   }
                   .author {
-                    width: calc(40% - 20px);
-                    text-align: right;
+                    width: calc(40% - 20px - 40px);
+                    text-align: left;
+                    padding-left: 10px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                     word-wrap: normal;
                     pointer-events: none;
+                  }
+                  .duration {
+                    width: 80px;
+                    text-align: right;
                   }
                 }
               }
