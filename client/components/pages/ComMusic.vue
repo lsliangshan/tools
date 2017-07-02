@@ -6,7 +6,7 @@
         <div class="music-info" v-text="musicInfo.name + '-' + musicInfo.author"></div>
       </div>
     </div>
-    <audio :src="musicInfo.url" controls id="bg-music" :currentTime="musicControl.currentTime.value" autoplay ref="bgMusic" v-music-loaded="musicInfo.url"></audio>
+    <audio :src="musicInfo.url" controls id="bg-music" :currentTime="musicControl.currentTime.value" ref="bgMusic" v-music-loaded="musicInfo.url"></audio>
     <transition name="musicContainerTransition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
       <md-toolbar class="music-container" :md-theme="theme" md-elevation="10" v-if="showMusicContainer">
         <div class="close" @click="closeMusicContainer">×</div>
@@ -240,8 +240,22 @@
               break
           }
         }
-        console.log(e)
       }
+
+//      var utterThis = new window.SpeechSynthesisUtterance('老师发现小明上课时老是讲话，生气地说：“小明，你要是再不老实，我就告诉你爸爸。”       小明十分冷静地说：“老师，其实我对你也不满意，我却从来没有告诉过你爸爸。”');
+//      var utterThis = new window.SpeechSynthesisUtterance('        ');
+      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“小明，你将来想找一份什么样的工作？” '));
+      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“钱多事少离家近！”'));
+      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“那是怎样的一份工作呢？”'));
+      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“在小区门口摆个碗，月收入过万！”'));
+      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“滚出去”'));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('老师我喜欢你'));
+//
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('我不喜欢小孩'));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('我也不喜欢小孩，我们可以不要小孩'));
+//
+//
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('滚出去'));
     },
     mounted () {
       this.musicInfo = Object.assign(this.musicInfo, this.musics[this.currentMusicIndex])
