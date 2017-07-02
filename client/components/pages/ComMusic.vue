@@ -268,7 +268,7 @@
               "backgroundColor": "#42b983"
             }
           },
-          loop: 0  // 循环方式。0：单曲重复；1：列表重复；2：随机播放
+          loop: 2  // 循环方式。0：单曲重复；1：列表重复；2：随机播放
         },
         showMusicContainer: false,
         showMusicListContainer: false,
@@ -298,6 +298,7 @@
           }
         })
         that.musics = res
+        that.currentMusicIndex = Math.floor(Math.random() * res.length)
 //        that.musics = res
       })
     },
