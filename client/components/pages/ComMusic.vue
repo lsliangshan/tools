@@ -192,13 +192,31 @@
     },
     created () {
       const that = this
-      $.post('http://talkapi.dei2.com/index/fetchPage', {
-        start: encodeURIComponent('<div class="bang_box bang_03">'),
-        end: encodeURIComponent('<div class="bang_box bang_04">')
-      }, function (res) {
-        that.musics = res
-        that.currentMusicIndex = Math.floor(Math.random() * res.length)
+//      $.post('http://talkapi.dei2.com/index/fetchPage', {
+//        start: encodeURIComponent('<div class="bang_box bang_03">'),
+//        end: encodeURIComponent('<div class="bang_box bang_04">')
+//      }, function (res) {
 //        that.musics = res
+//        that.currentMusicIndex = Math.floor(Math.random() * res.length)
+////        that.musics = res
+//      })
+      $.ajax({
+        async: false,
+        url: 'http://talkapi.dei2.com/index/fetchPage',
+        dataType: 'jsonp',
+        headers: {
+          "Accept" : "application/json; charset=utf-8",
+          "Content-Type": "application/javascript; charset=utf-8",
+          "Access-Control-Allow-Origin" : "*"
+        },
+        data: {
+          start: encodeURIComponent('<div class="bang_box bang_03">'),
+          end: encodeURIComponent('<div class="bang_box bang_04">')
+        },
+        success: function (res) {
+          that.musics = res
+          that.currentMusicIndex = Math.floor(Math.random() * res.length)
+        }
       })
     },
     mounted () {
