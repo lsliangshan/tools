@@ -78,6 +78,7 @@
 </template>
 
 <script>
+  import $ from 'jquery'
   import * as types from '../../store/mutation-types'
   import vueSlider from 'vue-slider-component'
   let animationId
@@ -284,6 +285,21 @@
       audioMuted () {
         return Number(this.musicControl.volume.value) === 0
       }
+    },
+    created () {
+      const that = this
+      $.get('http://127.0.0.1:3002/index/fetchPage', function (res) {
+        res.forEach(function (item, index, self) {
+          self[index] = {
+            name: (index + 1) + '. No Name',
+            author: 'Unknown',
+            url: decodeURIComponent(item),
+            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
+          }
+        })
+        that.musics = res
+//        that.musics = res
+      })
     },
     mounted () {
       this.musicInfo = Object.assign(this.musicInfo, this.musics[this.currentMusicIndex])
