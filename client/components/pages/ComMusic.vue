@@ -288,15 +288,10 @@
     },
     created () {
       const that = this
-      $.get('http://127.0.0.1:3002/index/fetchPage', function (res) {
-        res.forEach(function (item, index, self) {
-          self[index] = {
-            name: (index + 1) + '. No Name',
-            author: 'Unknown',
-            url: decodeURIComponent(item),
-            poster: 'http://imgcache.qq.com/music/photo/album_300/94/300_albumpic_989994_0.jpg'
-          }
-        })
+      $.post('http://talkapi.dei2.com/index/fetchPage', {
+        start: encodeURIComponent('<div class="bang_box bang_03">'),
+        end: encodeURIComponent('<div class="bang_box bang_04">')
+      }, function (res) {
         that.musics = res
         that.currentMusicIndex = Math.floor(Math.random() * res.length)
 //        that.musics = res
