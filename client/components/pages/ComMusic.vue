@@ -12,9 +12,9 @@
         <div class="close" @click="closeMusicContainer">×</div>
         <div class="main">
           <div class="inner">
-            <a href="javascript:" class="music-btn prev" title="上一首(ctrl+←)" @click="playPrev"></a>
+            <a href="javascript:" class="music-btn prev" title="上一首(Ctrl/Command+shift+←)" @click="playPrev"></a>
             <a href="javascript:" class="music-btn" :class="!musicControl.play ? 'play' : 'pause'" @click="playOrPause" title="播放/暂停(Ctrl/Command+P)"></a>
-            <a href="javascript:" class="music-btn next" title="下一首(ctrl+→)" @click="playNext"></a>
+            <a href="javascript:" class="music-btn next" title="下一首(Ctrl/Command+Shift+→)" @click="playNext"></a>
             <div class="poster">
               <img src="/static/img/default_cover.jpeg" :src="musicInfo.poster">
             </div>
@@ -202,6 +202,7 @@
 //      })
       $.ajax({
         async: false,
+//        url: 'http://127.0.0.1:3002/index/fetchPage',
         url: 'http://talkapi.dei2.com/index/fetchPage',
         dataType: 'jsonp',
         headers: {
@@ -217,7 +218,30 @@
           that.musics = res
           that.currentMusicIndex = Math.floor(Math.random() * res.length)
         }
-      })
+      });
+
+      document.onkeydown = function (evt) {
+        let e = evt || window.event || arguments.callee.caller.arguments[0];
+        if (e && (e.metaKey || e.ctrlKey) && e.shiftKey) {
+          switch (e.which) {
+            case 39:
+              // 下一首
+              that.playNext()
+              break
+            case 37:
+              // 上一首
+              that.playPrev()
+              break
+            case 80:
+              // 播放、暂停
+              that.playOrPause()
+              break
+            default:
+              break
+          }
+        }
+        console.log(e)
+      }
     },
     mounted () {
       this.musicInfo = Object.assign(this.musicInfo, this.musics[this.currentMusicIndex])
