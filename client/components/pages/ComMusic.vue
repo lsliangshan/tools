@@ -78,7 +78,6 @@
 </template>
 
 <script>
-  import $ from 'jquery'
   import * as types from '../../store/mutation-types'
   import vueSlider from 'vue-slider-component'
   let animationId
@@ -176,7 +175,8 @@
         },
         showMusicContainer: false,
         showMusicListContainer: false,
-        showMusicListOperation: -1
+        showMusicListOperation: -1,
+        jokes: []
       }
     },
     computed: {
@@ -202,14 +202,8 @@
 //      })
       $.ajax({
         async: false,
-//        url: 'http://127.0.0.1:3002/index/fetchPage',
-        url: 'http://talkapi.dei2.com/index/fetchPage',
+        url: that.$store.state.requestUrl + '/index/fetchPage',
         dataType: 'jsonp',
-        headers: {
-          "Accept" : "application/json; charset=utf-8",
-          "Content-Type": "application/javascript; charset=utf-8",
-          "Access-Control-Allow-Origin" : "*"
-        },
         data: {
           start: encodeURIComponent('<div class="bang_box bang_03">'),
           end: encodeURIComponent('<div class="bang_box bang_04">')
@@ -244,11 +238,13 @@
 
 //      var utterThis = new window.SpeechSynthesisUtterance('老师发现小明上课时老是讲话，生气地说：“小明，你要是再不老实，我就告诉你爸爸。”       小明十分冷静地说：“老师，其实我对你也不满意，我却从来没有告诉过你爸爸。”');
 //      var utterThis = new window.SpeechSynthesisUtterance('        ');
-      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“小明，你将来想找一份什么样的工作？” '));
-      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“钱多事少离家近！”'));
-      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“那是怎样的一份工作呢？”'));
-      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“在小区门口摆个碗，月收入过万！”'));
-      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“滚出去”'));
+
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“小明，你将来想找一份什么样的工作？” '));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“钱多事少离家近！”'));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“那是怎样的一份工作呢？”'));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“在小区门口摆个碗，月收入过万！”'));
+//      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('“滚出去”'));
+
 //      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('老师我喜欢你'));
 //
 //      window.speechSynthesis.speak(new window.SpeechSynthesisUtterance('我不喜欢小孩'));
@@ -261,6 +257,11 @@
       this.musicInfo = Object.assign(this.musicInfo, this.musics[this.currentMusicIndex])
     },
     methods: {
+      playJoke (joke) {
+        for (let i = 0; i < joke.length; i++) {
+          window.speechSynthesis.speak(new window.SpeechSynthesisUtterance(joke[i]));
+        }
+      },
       toggleVolumeSettings (target) {
         if (target.target.classList.contains('volume') || target.target.classList.contains('volume-muted')) {
           this.musicControl.showVolumeSettings = !this.musicControl.showVolumeSettings

@@ -24,12 +24,15 @@
 
 <script>
   const types = require('../store/mutation-types.js')
+  import $ from 'jquery'
   import ComTip from './utils/ComTip.vue'
   import ComDialog from './utils/ComDialog.vue'
   import ComAlert from './utils/ComAlert.vue'
   import ComConfirm from './utils/ComConfirm.vue'
   import ComPrompt from './utils/ComPrompt.vue'
   import ComLoading from './utils/ComLoading.vue'
+
+  window.jQuery = window.$ = $
   export default {
     data () {
       return {

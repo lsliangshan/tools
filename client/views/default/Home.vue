@@ -7,6 +7,7 @@
     </div>
     <img class="logo" src="../../../static/img/logo01.PNG">
     <com-music></com-music>
+    <com-joke></com-joke>
     <!--<h2 class="md-title app-name" v-text="appName"></h2>-->
     <md-tabs :md-theme="theme" class="zi99" md-right md-elevation="10">
       <!--<md-tab md-label="base64" md-tooltip="base64加解密">-->
@@ -34,6 +35,7 @@
   import ComColor from '../../components/pages/ComColor.vue'
   import ComJson from '../../components/pages/ComJson.vue'
   import ComMusic from '../../components/pages/ComMusic.vue'
+  import ComJoke from '../../components/pages/ComJoke.vue'
 
   export default {
     name: 'home',
@@ -57,7 +59,8 @@
       ComBase64,
       ComColor,
       ComJson,
-      ComMusic
+      ComMusic,
+      ComJoke
     }
   }
 </script>
