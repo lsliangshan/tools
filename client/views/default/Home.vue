@@ -17,6 +17,7 @@
       <com-json></com-json>
       <com-base64></com-base64>
       <com-color></com-color>
+      <com-letters></com-letters>
 
       <!--<md-tab md-icon="favorite">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
@@ -36,6 +37,7 @@
   import ComJson from '../../components/pages/ComJson.vue'
   import ComMusic from '../../components/pages/ComMusic.vue'
   import ComJoke from '../../components/pages/ComJoke.vue'
+  import ComLetters from '../../components/pages/ComLetters.vue'
 
   export default {
     name: 'home',
@@ -60,7 +62,8 @@
       ComColor,
       ComJson,
       ComMusic,
-      ComJoke
+      ComJoke,
+      ComLetters
     }
   }
 </script>
@@ -100,5 +103,9 @@
       z-index: 999;
       margin-top: 4px;
     }
+  }
+
+  .md-tooltip {
+    z-index: 999999;
   }
 </style>
