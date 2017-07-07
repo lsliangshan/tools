@@ -118,6 +118,7 @@
               $(el).draggable({
                 start: vnode.context[vnode.elm.dataset.before] || function () {},
                 stop: vnode.context[vnode.elm.dataset.after] || function () {},
+                scrollSpeed: 2,
                 containment: [-10, -100, _w - 38, _h - 200]
               })
 
