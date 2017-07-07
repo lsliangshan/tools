@@ -3,7 +3,7 @@
     <transition name="letter-mask-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
       <div class="letter-mask" v-if="activeIndex!=-1" @click="resetActiveIndex"></div>
     </transition>
-    <div class="letter-item init-transition-p4" v-for="(item, index) in letters" :key="item" :class="activeIndex==index?'active':''" :data-index="index" @click="handleClick($event)" data-before="dragBefore" data-after="dragAfter" v-ls-init>
+    <div class="letter-item init-transition-p4" v-for="(item, index) in letters" :key="item" :class="activeIndex==index?'active':(activeIndex!=-1&&activeIndex!=index?'blur':'')" :data-index="index" @click="handleClick($event)" data-before="dragBefore" data-after="dragAfter" v-ls-init>
       <div class="letter-header"></div>
       <div class="letter-logo">
         <img :src="item.logo" onerror="this.src='http://static.dei2.com/imgs/default.jpg'">
@@ -11,8 +11,8 @@
       <div class="letter-title" :title="item.title">
         <span v-text="item.title"></span>
       </div>
-      <div class="letter-content">
-        <span v-text="item.content"></span>
+      <div class="letter-content" v-text="item.content">
+
       </div>
       <div class="letter-time">
         <span data-format="YYYY年MM月DD日 H:m:s" :data-value="item.time" v-time-format></span>
@@ -139,6 +139,17 @@
             clearTimeout(_initTimeout)
           }, _randomTime)
         }
+      },
+      'lsText': {
+        inserted: function (el, binding, vnode) {
+          let _img = document.createElement('img')
+          _img.src = 'http://static.dei2.com/imgs/mask2.gif'
+          _img.style.width = '120px'
+          _img.style.height = '120px'
+          _img.style.position = 'relative'
+          _img.style.left = '65px'
+          el.appendChild(_img)
+        }
       }
     }
   }
@@ -190,7 +201,13 @@
         -o-transition: all .4s ease-in-out;
         transition: all .4s ease-in-out;
       }
+      &.blur {
+        -webkit-filter: blur(8px);
+        -ms-filter: blur(8px);
+        filter: blur(8px);
+      }
       &.active {
+        position: fixed;
         z-index: 999;
         -webkit-transform: rotate(0deg)!important;
         -moz-transform: rotate(0deg)!important;
