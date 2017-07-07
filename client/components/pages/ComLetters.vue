@@ -18,6 +18,23 @@
         <span data-format="YYYY年MM月DD日 H:m:s" :data-value="item.time" v-time-format></span>
       </div>
     </div>
+
+    <md-button md-theme="teal" class="md-fab md-primary md-fab-bottom-right zi99999">
+      <md-icon>edit</md-icon>
+      <md-tooltip md-direction="left">我也要发一个</md-tooltip>
+    </md-button>
+
+    <transition name="letter-form-transition"
+      @before-enter="letterFormBeforeEnter"
+      @enter="letterFormEnter"
+      @after-enter="letterFormAfterEnter"
+      @before-leave="letterFormBeforeLeave"
+      @leave="letterFormLeave"
+      @after-leave="letterFormAfterLeave">
+      <div class="letter-form-container">
+        <div class="letter-form"></div>
+      </div>
+    </transition>
   </md-tab>
 </template>
 
@@ -40,14 +57,14 @@
       }
     },
     created () {
-      for (var i = 0; i < 1; i++) {
-        this.letters.push({
-          logo: 'http://static.dei2.com/imgs/favicon.ico',
-          title: '这是标题' + (i + 1),
-          content: (i + 1) + '习近平指出，中韩地理相近、文化相通，互补优势明显。建交25年来，中韩双方秉持建交联合公报精神，本着相互理解、相互尊重原则，推动中韩关系实现跨越式发展，给两国和两国人民带来巨大福祉，也为地区和平稳定繁荣作出了重要贡献。',
-          time: +new Date()
-        })
-      }
+//      for (var i = 0; i < 1; i++) {
+//        this.letters.push({
+//          logo: 'http://static.dei2.com/imgs/favicon.ico',
+//          title: '这是标题' + (i + 1),
+//          content: (i + 1) + '习近平指出，中韩地理相近、文化相通，互补优势明显。建交25年来，中韩双方秉持建交联合公报精神，本着相互理解、相互尊重原则，推动中韩关系实现跨越式发展，给两国和两国人民带来巨大福祉，也为地区和平稳定繁荣作出了重要贡献。',
+//          time: +new Date()
+//        })
+//      }
     },
     methods: {
       resetActiveIndex () {
@@ -79,6 +96,26 @@
         } else {
           target.preventDefault()
         }
+      },
+      letterFormBeforeEnter (el) {
+
+      },
+      letterFormEnter (el, done) {
+
+        done()
+      },
+      letterFormAfterEnter (el) {
+
+      },
+      letterFormBeforeLeave (el) {
+
+      },
+      letterFormLeave (el, done) {
+
+        done()
+      },
+      letterFormAfterLeave (el) {
+
       }
     },
     directives: {
@@ -156,6 +193,9 @@
 </script>
 
 <style scoped lang="scss">
+  .zi99999 {
+    z-index: 99999;
+  }
   .letters-container {
     width: 100%;
     height: 100%;
@@ -269,6 +309,22 @@
         pointer-events: none;
         text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
         text-align: right;
+      }
+    }
+
+    .letter-form-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .letter-form {
+        width: 500px;
+        min-height: 300px;
+        border-radius: 5px;
+        background-color: #ffffff;
       }
     }
   }

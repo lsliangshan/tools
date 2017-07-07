@@ -51,7 +51,7 @@
     data () {
       return {
         tabs: [
-          'letters', 'json', 'base64', 'color'
+          'json', 'base64', 'color', 'letters'
         ]
       }
     },
