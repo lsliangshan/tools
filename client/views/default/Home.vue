@@ -9,15 +9,22 @@
     <com-music></com-music>
     <com-joke></com-joke>
     <!--<h2 class="md-title app-name" v-text="appName"></h2>-->
-    <md-tabs :md-theme="theme" class="zi99" md-right md-elevation="10">
+    <md-tabs :md-theme="theme" class="zi99" md-right md-elevation="10" @change="tabChanged">
       <!--<md-tab md-label="base64" md-tooltip="base64加解密">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
       <!--</md-tab>-->
 
-      <com-json></com-json>
-      <com-base64></com-base64>
-      <com-color></com-color>
-      <com-letters></com-letters>
+      <!--<com-json></com-json>-->
+      <!--<com-base64></com-base64>-->
+      <!--<com-color></com-color>-->
+      <!--<com-letters></com-letters>-->
+
+      <span v-for="(item, index) in tabs" :key="item">
+        <com-json v-if="item=='json'"></com-json>
+        <com-base64 v-if="item=='base64'"></com-base64>
+        <com-color v-if="item=='color'"></com-color>
+        <com-letters v-if="item=='letters'"></com-letters>
+      </span>
 
       <!--<md-tab md-icon="favorite">-->
         <!--<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt dolorum quas amet cum vitae, omnis! Illum quas voluptatem, expedita iste, dicta ipsum ea veniam dolore in, quod saepe reiciendis nihil.</p>-->
@@ -41,6 +48,13 @@
 
   export default {
     name: 'home',
+    data () {
+      return {
+        tabs: [
+          'letters', 'json', 'base64', 'color'
+        ]
+      }
+    },
     computed: {
       appName () {
         return this.$store.state.appName
@@ -55,6 +69,9 @@
       },
       hideSideMenu () {
         this.$parent.hideSideMenu()
+      },
+      tabChanged (idx) {
+        this.$router.replace('#' + this.tabs[idx])
       }
     },
     components: {

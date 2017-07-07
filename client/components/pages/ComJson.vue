@@ -1,5 +1,5 @@
 <template>
-  <md-tab md-label="json" class="json-container" md-tooltip="json解析">
+  <md-tab md-label="json" :md-active="defaultActive" class="json-container" md-tooltip="json解析">
     <div class="json-src" :class="srcContainerShown ? '' : 'hide'" @mouseenter="showToggle" @mouseleave="hideToggle">
       <!--<div class="json-src-header">-->
         <!--<i class="fa fa-fw fa-angle-double-left"></i>-->
@@ -57,6 +57,9 @@
     computed: {
       theme () {
         return this.$store.state.theme
+      },
+      defaultActive () {
+        return (this.$route.hash.substring(1).toLowerCase() === 'json')
       }
     },
     created () {

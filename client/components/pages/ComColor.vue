@@ -1,5 +1,5 @@
 <template>
-  <md-tab md-label="color" class="color-container" md-tooltip="颜色工具">
+  <md-tab md-label="color" :md-active="defaultActive" class="color-container" md-tooltip="颜色工具">
     <div class="color-card">
       <md-card md-with-hover class="ch">
         <md-card-media md-ratio="16:9">
@@ -131,6 +131,9 @@
       },
       theme () {
         return this.$store.state.theme
+      },
+      defaultActive () {
+        return (this.$route.hash.substring(1).toLowerCase() === 'color')
       },
       darkenOpts () {
         let opts = {

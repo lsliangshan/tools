@@ -1,5 +1,5 @@
 <template>
-  <md-tab md-label="letters" class="letters-container" md-tooltip="letters" ref="letters">
+  <md-tab md-label="letters" :md-active="defaultActive" class="letters-container" md-tooltip="letters" ref="letters">
     <transition name="letter-mask-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
       <div class="letter-mask" v-if="activeIndex!=-1" @click="resetActiveIndex"></div>
     </transition>
@@ -34,6 +34,9 @@
     computed: {
       theme () {
         return this.$store.state.theme
+      },
+      defaultActive () {
+        return (this.$route.hash.substring(1).toLowerCase() === 'letters')
       }
     },
     created () {
