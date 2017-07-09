@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <md-button md-theme="teal" class="md-fab md-primary md-fab-bottom-right zi99999">
+    <md-button md-theme="teal" class="md-fab md-primary md-fab-bottom-right zi99999" @click.native="showLetterForm">
       <md-icon>edit</md-icon>
       <md-tooltip md-direction="left">我也要发一个</md-tooltip>
     </md-button>
@@ -30,9 +30,37 @@
       @after-enter="letterFormAfterEnter"
       @before-leave="letterFormBeforeLeave"
       @leave="letterFormLeave"
-      @after-leave="letterFormAfterLeave">
-      <div class="letter-form-container">
-        <div class="letter-form"></div>
+      @after-leave="letterFormAfterLeave"
+                v-bind:css="false">
+      <div class="letter-form-container" v-if="letterFormShown" @click.self="hideLetterForm">
+        <div class="letter-form">
+          <div class="letter-form-header">
+            <p>新建Letter</p>
+            <p class="close" @click="hideLetterForm">×</p>
+          </div>
+          <div class="letter-form-body">
+            <form novalidate>
+              <div class="letter-image">
+                <span>图片</span>
+                <div class="image">
+                  <input type="file">
+                </div>
+              </div>
+              <md-input-container md-clearable>
+                <label>标题</label>
+                <md-input v-model="letterFormInfo.title"></md-input>
+              </md-input-container>
+              <md-input-container>
+                <label>描述</label>
+                <md-textarea maxlength="70" style="max-height: 70px;" v-model="letterFormInfo.content"></md-textarea>
+              </md-input-container>
+            </form>
+          </div>
+          <div class="letter-form-footer">
+            <md-button md-theme="teal" class="md-raised md-primary">保存</md-button>
+            <md-button md-theme="red" class="md-primary" @click.native="hideLetterForm">取消</md-button>
+          </div>
+        </div>
       </div>
     </transition>
   </md-tab>
@@ -40,12 +68,19 @@
 
 <script>
   import * as types from '../../store/mutation-types'
+  import Velocity from 'velocity-animate'
 
   export default {
     data () {
       return {
         letters: [],
-        activeIndex: -1
+        activeIndex: -1,
+        letterFormShown: false,
+        letterFormInfo: {
+          title: '',
+          content: '',
+          image: ''
+        }
       }
     },
     computed: {
@@ -67,6 +102,12 @@
 //      }
     },
     methods: {
+      hideLetterForm () {
+        this.letterFormShown = false
+      },
+      showLetterForm () {
+        this.letterFormShown = true
+      },
       resetActiveIndex () {
         let _activeItem = this.$refs.letters.$el.querySelectorAll('.letter-item')[this.activeIndex]
         _activeItem.style.left = _activeItem.getAttribute('data-origin-left') + 'px'
@@ -98,11 +139,31 @@
         }
       },
       letterFormBeforeEnter (el) {
-
       },
       letterFormEnter (el, done) {
-
-        done()
+        const _w = $(window).width()
+        const _h = $(window).height()
+        let _letterForm = el.querySelector('.letter-form')
+        Velocity(_letterForm, {
+          translateX: (_w / 2 - 50),
+          translateY: (_h / 2 - 50),
+          translateZ: 0,
+          scale: 0,
+          opacity: 0
+        }, {
+          duration: 10
+        })
+        Velocity(_letterForm, {
+          translateX: 0,
+          translateY: 0,
+          translateZ: 0,
+          scale: 1,
+          opacity: 1
+        }, {
+          easing: [0.215,.61,.355,1],
+          duration: 500,
+          done
+        })
       },
       letterFormAfterEnter (el) {
 
@@ -111,8 +172,19 @@
 
       },
       letterFormLeave (el, done) {
-
-        done()
+        const _w = $(window).width()
+        const _h = $(window).height()
+        let _letterForm = el.querySelector('.letter-form')
+        Velocity(_letterForm, {
+          translateX: (_w / 2 - 50),
+          translateY: (_h / 2 - 50),
+          translateZ: 0,
+          scale: 0,
+          opacity: 0
+        }, {
+          duration: 500,
+          complete: done
+        })
       },
       letterFormAfterLeave (el) {
 
@@ -322,9 +394,74 @@
       justify-content: center;
       .letter-form {
         width: 500px;
-        min-height: 300px;
+        min-height: 400px;
         border-radius: 5px;
+        overflow: hidden;
         background-color: #ffffff;
+        .letter-form-header {
+          position: relative;
+          width: 100%;
+          height: 48px;
+          line-height: 48px;
+          background-color: #424242;
+          color: #ffffff;
+          padding: 0 15px;
+          font-size: 16px;
+          .close {
+            width: 48px;
+            height: 48px;
+            position: absolute;
+            right: 0;
+            line-height: 48px;
+            top: 0;
+            text-align: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+            &:hover {
+              color: #eee;
+            }
+          }
+        }
+        .letter-form-body {
+          width: 100%;
+          height: 304px;
+          padding: 15px;
+          .letter-image {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            span {
+              width: 40px;
+              color: #666;
+            }
+            .image {
+              width: 64px;
+              height: 64px;
+              border: 1px solid #e5e5e5;
+              input {
+                width: 64px;
+                height: 64px;
+                opacity: 0;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+        .letter-form-footer {
+          position: relative;
+          width: 100%;
+          height: 48px;
+          line-height: 48px;
+          color: #ffffff;
+          padding: 0 15px;
+          background-color: #ffffff;
+          button {
+            float: right;
+          }
+        }
       }
     }
   }
