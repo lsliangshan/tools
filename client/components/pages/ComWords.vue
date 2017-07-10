@@ -1,5 +1,6 @@
 <template>
   <md-tab md-label="words" :md-active="defaultActive" class="words-container" md-tooltip="words" ref="words">
+    <!--<img crossOrigin="" id="target" src="http://static.dei2.com/imgs/default.jpg">-->
     <md-button md-theme="teal" class="md-raised md-primary" @click.native="test">保存</md-button>
   </md-tab>
 </template>
@@ -26,7 +27,9 @@
     },
     methods: {
       test () {
-        console.log('。。。。', this.getBase64Image('http://static.dei2.com/imgs/default.jpg'))
+        this.getBase64Image('http://static.dei2.com/imgs/default.jpg').then(function (result) {
+          console.log('...++++...', result)
+        })
       },
       getBase64Image (img) {
         let canvas = document.createElement('canvas')
@@ -40,21 +43,21 @@
 
           dataURL = canvas.toDataURL('image/png')
 
-          return dataURL
+          return new Promise(function (resolve, reject) {
+            resolve(dataURL)
+          })
         } else {
-          let _img = document.createElement('img') // new Image()
+          let _img = new Image()
           _img.src = img
-//          _img.setAttribute('crossOrigin', 'anonymous')
-          _img.crossOrigin = 'anonymous'
-          _img.onload = function () {
-            console.log('.>>>>', img)
-            canvas.width = _img.width
-            canvas.height = _img.height
-            ctx.drawImage(_img, 0, 0, _img.width, _img.height)
-            dataURL = canvas.toDataURL('image/png')
-
-            return dataURL
-          }
+          return new Promise(function (resolve, reject) {
+            _img.onload = function () {
+              canvas.width = _img.width
+              canvas.height = _img.height
+              ctx.drawImage(_img, 0, 0, _img.width, _img.height)
+              dataURL = canvas.toDataURL('image/png')
+              resolve(dataURL)
+            }
+          })
         }
       }
     },
@@ -140,6 +143,5 @@
     width: 100%;
     height: 100%;
     padding: 0;
-    position: relative;
   }
 </style>
