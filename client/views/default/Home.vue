@@ -24,6 +24,7 @@
         <com-base64 v-if="item=='base64'"></com-base64>
         <com-color v-if="item=='color'"></com-color>
         <com-letters v-if="item=='letters'"></com-letters>
+        <com-words v-if="item=='words'"></com-words>
       </span>
 
       <!--<md-tab md-icon="favorite">-->
@@ -45,13 +46,14 @@
   import ComMusic from '../../components/pages/ComMusic.vue'
   import ComJoke from '../../components/pages/ComJoke.vue'
   import ComLetters from '../../components/pages/ComLetters.vue'
+  import ComWords from '../../components/pages/ComWords.vue'
 
   export default {
     name: 'home',
     data () {
       return {
         tabs: [
-          'json', 'base64', 'color', 'letters'
+          'json', 'base64', 'color', 'letters', 'words'
         ]
       }
     },
@@ -80,7 +82,8 @@
       ComJson,
       ComMusic,
       ComJoke,
-      ComLetters
+      ComLetters,
+      ComWords
     }
   }
 </script>

@@ -32,6 +32,13 @@
   import ComPrompt from './utils/ComPrompt.vue'
   import ComLoading from './utils/ComLoading.vue'
 
+  import Promise from 'promise-polyfill';
+
+  // To add to window
+  if (!window.Promise) {
+    window.Promise = Promise;
+  }
+
   window.jQuery = window.$ = $
   export default {
     data () {
