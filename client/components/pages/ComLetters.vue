@@ -3,10 +3,10 @@
     <transition name="letter-mask-transition" enter-active-class="animated-p3 fadeIn" leave-active-class="animated-p3 fadeOut">
       <div class="letter-mask" v-if="activeIndex!=-1" @click="resetActiveIndex"></div>
     </transition>
-    <div class="letter-item init-transition-p4" v-for="(item, index) in letters" :key="item" :class="activeIndex==index?'active':(activeIndex!=-1&&activeIndex!=index?'blur':'')" :data-index="index" @click="handleClick($event)" data-before="dragBefore" data-after="dragAfter" v-ls-init>
+    <div class="letter-item init-transition-p3" v-for="(item, index) in letters" :key="item" :class="activeIndex==index?'active':(activeIndex!=-1&&activeIndex!=index?'blur':'')" :data-index="index" @click="handleClick($event)" data-before="dragBefore" data-after="dragAfter" v-ls-init>
       <div class="letter-header"></div>
       <div class="letter-logo">
-        <img :src="item.logo" onerror="this.src='http://static.dei2.com/imgs/default.jpg'">
+        <img :src="item.image" onerror="this.src='http://static.dei2.com/imgs/default.jpg'">
       </div>
       <div class="letter-title" :title="item.title">
         <span v-text="item.title"></span>
@@ -15,7 +15,7 @@
 
       </div>
       <div class="letter-time">
-        <span data-format="YYYY年MM月DD日 H:m:s" :data-value="item.time" v-time-format></span>
+        <span data-format="YYYY年MM月DD日 H:m:s" :data-value="item.update_time*1000" v-time-format></span>
       </div>
     </div>
 
@@ -40,12 +40,12 @@
           </div>
           <div class="letter-form-body">
             <form novalidate>
-              <div class="letter-image">
-                <span>图片</span>
-                <div class="image">
-                  <input type="file">
-                </div>
-              </div>
+              <!--<div class="letter-image">-->
+                <!--<span>图片</span>-->
+                <!--<div class="image">-->
+                  <!--<input type="file">-->
+                <!--</div>-->
+              <!--</div>-->
               <md-input-container md-clearable>
                 <label>标题</label>
                 <md-input v-model="letterFormInfo.title"></md-input>
@@ -57,7 +57,7 @@
             </form>
           </div>
           <div class="letter-form-footer">
-            <md-button md-theme="teal" class="md-raised md-primary">保存</md-button>
+            <md-button md-theme="teal" class="md-raised md-primary" @click.native="saveLetter">保存</md-button>
             <md-button md-theme="red" class="md-primary" @click.native="hideLetterForm">取消</md-button>
           </div>
         </div>
@@ -100,8 +100,43 @@
 //          time: +new Date()
 //        })
 //      }
+      const that = this
+      $.ajax({
+        async: false,
+        url: that.$store.state.requestUrl + '/index/getLetters',
+        dataType: 'jsonp',
+        success: function (res) {
+          if (Number(res.code) === 200) {
+            that.letters = res.data
+          }
+        }
+      })
     },
     methods: {
+      saveLetter () {
+        const that = this
+        $.ajax({
+          async: false,
+          url: that.$store.state.requestUrl + '/index/saveLetter',
+          data: {
+            title: this.letterFormInfo.title,
+            content: this.letterFormInfo.content,
+            image: this.letterFormInfo.image
+          },
+          dataType: 'jsonp',
+          success: function (res) {
+            if (Number(res.code) === 200) {
+              that.letters.push(res.data)
+              that.letterFormInfo = {
+                title: '',
+                content: '',
+                image: ''
+              }
+              that.hideLetterForm()
+            }
+          }
+        })
+      },
       hideLetterForm () {
         this.letterFormShown = false
       },
@@ -116,10 +151,10 @@
       },
       dragBefore (event, ui) {
         !event.target.classList.contains('ls-dragging') && event.target.classList.add('ls-dragging')
-        event.target.classList.contains('init-transition-p4') && event.target.classList.remove('init-transition-p4')
+        event.target.classList.contains('init-transition-p3') && event.target.classList.remove('init-transition-p3')
       },
       dragAfter (event, ui) {
-        !event.target.classList.contains('init-transition-p4') && event.target.classList.add('init-transition-p4')
+        !event.target.classList.contains('init-transition-p3') && event.target.classList.add('init-transition-p3')
         event.target.setAttribute('data-origin-left', ui.position.left)
         event.target.setAttribute('data-origin-top', ui.position.top)
         setTimeout(function () {
@@ -139,11 +174,17 @@
         }
       },
       letterFormBeforeEnter (el) {
+        el.style.opacity = 0
       },
       letterFormEnter (el, done) {
         const _w = $(window).width()
         const _h = $(window).height()
         let _letterForm = el.querySelector('.letter-form')
+        Velocity(el, {
+          opacity: 1
+        }, {
+          duration: 300
+        })
         Velocity(_letterForm, {
           translateX: (_w / 2 - 50),
           translateY: (_h / 2 - 50),
@@ -161,7 +202,7 @@
           opacity: 1
         }, {
           easing: [0.215,.61,.355,1],
-          duration: 500,
+          duration: 400,
           done
         })
       },
@@ -175,6 +216,11 @@
         const _w = $(window).width()
         const _h = $(window).height()
         let _letterForm = el.querySelector('.letter-form')
+        Velocity(el, {
+          opacity: 0
+        }, {
+          duration: 200
+        })
         Velocity(_letterForm, {
           translateX: (_w / 2 - 50),
           translateY: (_h / 2 - 50),
@@ -182,7 +228,7 @@
           scale: 0,
           opacity: 0
         }, {
-          duration: 500,
+          duration: 300,
           complete: done
         })
       },
@@ -313,13 +359,19 @@
         -o-transition: all .4s ease-in-out;
         transition: all .4s ease-in-out;
       }
+      &.init-transition-p3 {
+        -webkit-transition: all .3s ease-in-out;
+        -moz-transition: all .3s ease-in-out;
+        -o-transition: all .3s ease-in-out;
+        transition: all .3s ease-in-out;
+      }
       &.blur {
         -webkit-filter: blur(8px);
         -ms-filter: blur(8px);
         filter: blur(8px);
       }
       &.active {
-        position: fixed;
+        position: absolute;
         z-index: 999;
         -webkit-transform: rotate(0deg)!important;
         -moz-transform: rotate(0deg)!important;
@@ -388,6 +440,7 @@
       position: absolute;
       width: 100%;
       height: 100%;
+      z-index: 9999;
       background-color: rgba(0, 0, 0, 0.5);
       display: flex;
       align-items: center;
