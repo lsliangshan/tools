@@ -11,7 +11,6 @@
   export default {
     data () {
       return {
-        letters: [],
         activeIndex: -1
       }
     },
@@ -20,7 +19,7 @@
         return this.$store.state.theme
       },
       defaultActive () {
-        return (this.$route.hash.substring(1).toLowerCase() === 'letters')
+        return (this.$route.hash.substring(1).toLowerCase() === 'words')
       }
     },
     created () {
