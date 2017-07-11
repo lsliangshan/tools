@@ -292,52 +292,90 @@
                     animationOut: 'fadeOut'
                   })
                 } else {
-                  // 上传文件合法
-                  var formData = new FormData();
-                  formData.append('file', _file)
-//                  let httprequest = new XMLHttpRequest()
-//                  XMLHttpRequest.onreadystatechange = function () {
-//                    console.log(httprequest.responseText)
-//                  }
-//                  httprequest.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
-//                  httprequest.send(formData)
+                  function uploadFile() {
+                    var fd = new window.FormData()
+                    fd.append("file", _file)
+                    console.log(_file)
+                    var xhr = new window.XMLHttpRequest()
+                    //上传中设置上传的百分比
+                    xhr.upload.addEventListener("progress", function(ev){
+                      console.log('.... progress .....', ev.loaded, ev.total)
+                    }, false)
+                    //请求完成后执行的操作
+                    xhr.addEventListener('load', function(e){
+                      var message = e.target.responseText
+                      console.log('..... 上传成功：', message)
+                    }, false)
+                    //发送请求
+                    xhr.open('post', vnode.context.$store.state.requestUrl + '/index/uploadImage')
+                    xhr.setRequestHeader('Content-type', 'multipart/form-data')
+                    xhr.send(fd)
+                  }
+                  uploadFile()
 
-                  $.ajax({
-                    type: 'POST',
-                    url: vnode.context.$store.state.requestUrl + '/index/uploadImage',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    cache: false,
-//                    xhr: function () {
-//                      let xhr = new window.XMLHttpRequest()
+                  // 上传文件合法
+//                  var formData = new FormData()
+//                  formData.append('file', _file)
+//                  console.log('......... ', formData)
+////                  let httprequest = new XMLHttpRequest()
+////                  XMLHttpRequest.onreadystatechange = function () {
+////                    console.log(httprequest.responseText)
+////                  }
+////                  httprequest.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
+////                  httprequest.send(formData)
 //
-//                      xhr.upload.addEventListener('progress', function (evt) {
-//                        if (evt.lengthComputable) {
-//                          let percentComplete = Math.floor(evt.loaded / evt.total) * 100% + '%'
-//                          console.log('......', percentComplete)
-//                        }
-//                        console.log('+++++++', evt)
-//                      }, false)
+//                  let xhr = new XMLHttpRequest()
+//                  console.log(xhr.upload)
+//                  if (xhr.upload) {
+//                    xhr.upload.addEventListener('progress', function (e) {
+//                      console.log('uploading ... ', e.loaded, e.total)
+//                    }, false)
 //
-//                      return xhr
+//                    xhr.onreadystatechange = function (e) {
+//                      if (xhr.readyState === 4 && xhr.status === 200) {
+//                        console.log('上传完成: ', xhr.responseText)
+////                        evt.target.value = ''
+//                      }
+//                    }
+//
+//                    xhr.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
+//                    xhr.send(formData)
+//                  }
+
+//                  $.ajax({
+//                    type: 'POST',
+//                    url: vnode.context.$store.state.requestUrl + '/index/uploadImage',
+//                    data: formData,
+//                    processData: false,
+//                    contentType: false,
+//                    cache: false,
+////                    xhr: function () {
+////                      let xhr = new window.XMLHttpRequest()
+////
+////                      xhr.upload.addEventListener('progress', function (evt) {
+////                        if (evt.lengthComputable) {
+////                          let percentComplete = Math.floor(evt.loaded / evt.total) * 100% + '%'
+////                          console.log('......', percentComplete)
+////                        }
+////                        console.log('+++++++', evt)
+////                      }, false)
+////
+////                      return xhr
+////                    },
+////                    progress: function (evt) {
+////                      if (evt.lengthComputable) {
+////                        let percentComplete = Math.floor(evt.loaded / evt.total) * 100% + '%'
+////                        console.log('......', percentComplete)
+////                      }
+////                      console.log('+++++++', evt)
+////                    },
+//                    success: function (res) {
+//                      console.log('上传成功: ', res)
 //                    },
-                    xhrFields: {
-                      onprogress: function (evt) {
-                        if (evt.lengthComputable) {
-                          let percentComplete = Math.floor(evt.loaded / evt.total) * 100% + '%'
-                          console.log('......', percentComplete)
-                        }
-                        console.log('+++++++', evt)
-                      }
-                    },
-                    success: function (res) {
-                      console.log('上传成功: ', res)
-                    },
-                    error: function (err) {
-                      console.log('上传失败：', err)
-                    }
-                  })
+//                    error: function (err) {
+//                      console.log('上传失败：', err)
+//                    }
+//                  })
 
 //                  $.ajax({
 //                    async: false,
