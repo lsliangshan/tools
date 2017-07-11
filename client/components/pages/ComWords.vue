@@ -308,6 +308,22 @@
                     data: formData,
                     processData: false,
                     contentType: false,
+                    cache: false,
+                    beforeSend: function () {
+
+                    },
+                    xhr: function () {
+                      let xhr = new window.XMLHttpRequest()
+
+                      xhr.upload.addEventListener('progress', function (evt) {
+                        if (evt.lengthComputable) {
+                          let percentComplete = Math.floor(evt.loaded / evt.total) * 100% + '%'
+                          console.log('......', percentComplete)
+                        }
+                      }, false)
+
+                      return xhr
+                    },
                     success: function (res) {
                       console.log('上传成功: ', res)
                     },
