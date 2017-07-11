@@ -262,7 +262,6 @@
       'uploadFile': {
         inserted: function (el, binding, vnode) {
           el.addEventListener('change', function (evt) {
-            console.log('..... evt: ', evt)
             let _dataset = evt.target.dataset
             let acceptTypes = _dataset.hasOwnProperty('accept') ? _dataset.accept.split('|') : []
             if (evt.target.files.length > 0) {
@@ -294,15 +293,29 @@
                   })
                 } else {
                   // 上传文件合法
-                  console.log('============ changed ============')
                   var formData = new FormData();
                   formData.append('file', _file)
-                  let httprequest = new XMLHttpRequest()
-                  XMLHttpRequest.onreadystatechange = function () {
-                    console.log(httprequest.responseText)
-                  }
-                  httprequest.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
-                  httprequest.send(formData)
+//                  let httprequest = new XMLHttpRequest()
+//                  XMLHttpRequest.onreadystatechange = function () {
+//                    console.log(httprequest.responseText)
+//                  }
+//                  httprequest.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
+//                  httprequest.send(formData)
+
+                  $.ajax({
+                    type: 'POST',
+                    url: vnode.context.$store.state.requestUrl + '/index/uploadImage',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                      console.log('上传成功: ', res)
+                    },
+                    error: function (err) {
+                      console.log('上传失败：', err)
+                    }
+                  })
+
 //                  $.ajax({
 //                    async: false,
 //                    url: vnode.context.$store.state.requestUrl + '/index/uploadImage',
