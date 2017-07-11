@@ -2,6 +2,52 @@
   <md-tab md-label="words" :md-active="defaultActive" class="words-container" md-tooltip="words" ref="words">
     <!--<img crossOrigin="" id="target" src="http://static.dei2.com/imgs/default.jpg">-->
     <md-button md-theme="teal" class="md-raised md-primary" @click.native="test">保存</md-button>
+
+    <md-button md-theme="teal" class="md-fab md-primary md-fab-bottom-right zi99999" @click.native="showWordForm">
+      <md-icon>edit</md-icon>
+      <md-tooltip md-direction="left">我也要发一个</md-tooltip>
+    </md-button>
+
+    <transition name="letter-form-transition"
+                @before-enter="wordsFormBeforeEnter"
+                @enter="wordsFormEnter"
+                @after-enter="wordsFormAfterEnter"
+                @before-leave="wordsFormBeforeLeave"
+                @leave="wordsFormLeave"
+                @after-leave="wordsFormAfterLeave"
+                v-bind:css="false">
+      <div class="words-form-container" v-if="wordFormShown" @click.self="hideWordForm">
+        <div class="words-form">
+          <div class="words-form-header">
+            <p>新建Letter</p>
+            <p class="close" @click="hideWordForm">×</p>
+          </div>
+          <div class="words-form-body">
+            <form novalidate>
+              <div class="words-image">
+                <span>图片</span>
+                <div class="image">
+                  <img class="preview-image" :src="wordFormInfo.image" onerror="this.src='http://static.dei2.com/imgs/favicon.ico'" alt="">
+                  <input type="file" :data-accept="uploadFileInfo.accept" :data-max-size="uploadFileInfo.maxSize" v-upload-file>
+                </div>
+              </div>
+              <md-input-container md-clearable>
+                <label>标题</label>
+                <md-input v-model="wordFormInfo.title"></md-input>
+              </md-input-container>
+              <md-input-container>
+                <label>描述</label>
+                <md-textarea maxlength="70" style="max-height: 70px;" v-model="wordFormInfo.content"></md-textarea>
+              </md-input-container>
+            </form>
+          </div>
+          <div class="words-form-footer">
+            <md-button md-theme="teal" class="md-raised md-primary" @click.native="saveWord">保存</md-button>
+            <md-button md-theme="red" class="md-primary" @click.native="hideWordForm">取消</md-button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </md-tab>
 </template>
 
@@ -12,7 +58,17 @@
   export default {
     data () {
       return {
-        activeIndex: -1
+        activeIndex: -1,
+        wordFormShown: false,
+        wordFormInfo: {
+          title: '',
+          content: '',
+          image: ''
+        },
+        uploadFileInfo: {
+          accept: 'jpg|png|jpeg|gif',
+          maxSize: 2 * 1024 * 1024
+        }
       }
     },
     computed: {
@@ -26,6 +82,12 @@
     created () {
     },
     methods: {
+      hideWordForm () {
+        this.wordFormShown = false
+      },
+      showWordForm () {
+        this.wordFormShown = true
+      },
       test () {
         this.getBase64Image('http://static.dei2.com/imgs/default.jpg').then(function (result) {
           console.log('...++++...', result)
@@ -59,7 +121,73 @@
             }
           })
         }
+      },
+      wordsFormBeforeEnter (el) {
+        el.style.opacity = 0
+      },
+      wordsFormEnter (el, done) {
+        const _w = $(window).width()
+        const _h = $(window).height()
+        let _wordForm = el.querySelector('.words-form')
+        Velocity(el, {
+          opacity: 1
+        }, {
+          duration: 300
+        })
+        Velocity(_wordForm, {
+          translateX: (_w / 2 - 50),
+          translateY: (_h / 2 - 50),
+          translateZ: 0,
+          scale: 0,
+          opacity: 0
+        }, {
+          duration: 10
+        })
+        Velocity(_wordForm, {
+          translateX: 0,
+          translateY: 0,
+          translateZ: 0,
+          scale: 1,
+          opacity: 1
+        }, {
+          easing: [0.215,.61,.355,1],
+          duration: 400,
+          done
+        })
+      },
+      wordsFormAfterEnter (el) {
+
+      },
+      wordsFormBeforeLeave (el) {
+
+      },
+      wordsFormLeave (el, done) {
+        const _w = $(window).width()
+        const _h = $(window).height()
+        let _wordForm = el.querySelector('.words-form')
+        Velocity(el, {
+          opacity: 0
+        }, {
+          duration: 200
+        })
+        Velocity(_wordForm, {
+          translateX: (_w / 2 - 50),
+          translateY: (_h / 2 - 50),
+          translateZ: 0,
+          scale: 0,
+          opacity: 0
+        }, {
+          duration: 300,
+          complete: done
+        })
+      },
+      wordsFormAfterLeave (el) {
+
       }
+//      ,
+//      uploadImage (target) {
+//        console.log('.... upload image: ', target)
+//      }
     },
     directives: {
       'lsDrag': {
@@ -130,6 +258,71 @@
           _img.style.left = '65px'
           el.appendChild(_img)
         }
+      },
+      'uploadFile': {
+        inserted: function (el, binding, vnode) {
+          el.addEventListener('change', function (evt) {
+            console.log('..... evt: ', evt)
+            let _dataset = evt.target.dataset
+            let acceptTypes = _dataset.hasOwnProperty('accept') ? _dataset.accept.split('|') : []
+            if (evt.target.files.length > 0) {
+              let _file = evt.target.files[0]
+              if (acceptTypes.indexOf(_file.type.replace(/image\//, '')) === -1) {
+                // 上传文件类型不合法
+                // 清空file
+//                evt.target.value = ''
+                vnode.context.$store.commit('INSERT_TIP', {
+                  type: 'error',
+                  message: '文件类型不合法，只接收' + _dataset.accept,
+                  cancel: false,
+                  duration: 3000,
+                  animationIn: 'fadeIn',
+                  animationOut: 'fadeOut'
+                })
+              } else {
+                // 上传文件类型合法
+                let _acceptSize = _dataset.hasOwnProperty('maxSize') ? _dataset.maxSize : (2 * 1024 * 1024)
+                if (Number(_file.size) > Number(_acceptSize)) {
+                  // 上传文件大小，默认 2 * 1024 * 1024
+                  vnode.context.$store.commit('INSERT_TIP', {
+                    type: 'error',
+                    message: '文件应小于' + (parseFloat(_dataset.maxSize)/1024/1024).toFixed(2) + 'M',
+                    cancel: false,
+                    duration: 10000,
+                    animationIn: 'fadeIn',
+                    animationOut: 'fadeOut'
+                  })
+                } else {
+                  // 上传文件合法
+                  console.log('============ changed ============')
+                  var formData = new FormData();
+                  formData.append('file', _file)
+                  let httprequest = new XMLHttpRequest()
+                  XMLHttpRequest.onreadystatechange = function () {
+                    console.log(httprequest.responseText)
+                  }
+                  httprequest.open('POST', vnode.context.$store.state.requestUrl + '/index/uploadImage')
+                  httprequest.send(formData)
+//                  $.ajax({
+//                    async: false,
+//                    url: vnode.context.$store.state.requestUrl + '/index/uploadImage',
+//                    method: 'post',
+//                    data: {
+//                      file: _file
+//                    },
+//                    dataType: 'json',
+//                    success: function (res) {
+//                      if (Number(res.code) === 200) {
+//                        console.log('文件上传', res)
+//                      }
+//                    }
+//                  })
+
+                }
+              }
+            }
+          }, false)
+        }
       }
     }
   }
@@ -143,5 +336,97 @@
     width: 100%;
     height: 100%;
     padding: 0;
+  }
+
+  .words-form-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .words-form {
+      width: 500px;
+      min-height: 400px;
+      border-radius: 5px;
+      overflow: hidden;
+      background-color: #ffffff;
+      .words-form-header {
+        position: relative;
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        background-color: #424242;
+        color: #ffffff;
+        padding: 0 15px;
+        font-size: 16px;
+        .close {
+          width: 48px;
+          height: 48px;
+          position: absolute;
+          right: 0;
+          line-height: 48px;
+          top: 0;
+          text-align: center;
+          cursor: pointer;
+          font-size: 24px;
+          color: #999;
+          &:hover {
+            color: #eee;
+          }
+        }
+      }
+      .words-form-body {
+        width: 100%;
+        height: 304px;
+        padding: 15px;
+        .words-image {
+          width: 100%;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          span {
+            width: 40px;
+            color: #666;
+          }
+          .image {
+            width: 64px;
+            height: 64px;
+            border: 1px solid #e5e5e5;
+            position: relative;
+            .preview-image {
+              pointer-events: none;
+              max-width: 100%;
+              max-height: 100%;
+            }
+            input[type='file'] {
+              position: absolute;
+              top: 0;
+              width: 64px;
+              height: 64px;
+              opacity: 0;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .words-form-footer {
+        position: relative;
+        width: 100%;
+        height: 48px;
+        line-height: 48px;
+        color: #ffffff;
+        padding: 0 15px;
+        background-color: #ffffff;
+        button {
+          float: right;
+        }
+      }
+    }
   }
 </style>
