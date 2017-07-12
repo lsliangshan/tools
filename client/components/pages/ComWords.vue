@@ -19,16 +19,32 @@
       <div class="words-form-container" v-if="wordFormShown" @click.self="hideWordForm">
         <div class="words-form">
           <div class="words-form-header">
-            <p>新建Letter</p>
+            <p>新建Word</p>
             <p class="close" @click="hideWordForm">×</p>
           </div>
           <div class="words-form-body">
-            <form novalidate>
+            <!--<form novalidate>-->
               <div class="words-image">
                 <span>图片</span>
                 <div class="image">
                   <img class="preview-image" :src="wordFormInfo.image" onerror="this.src='http://static.dei2.com/imgs/favicon.ico'" alt="">
-                  <input type="file" :data-accept="uploadFileInfo.accept" :data-max-size="uploadFileInfo.maxSize" v-upload-file>
+                  <com-upload
+                          :style="uploadComStyle"
+                          class="test"
+                          name="file"
+                          data-accept="jpg|jpeg|png|gif"
+                          :data-max-size="2*1024*1024"
+                          :data-action="requestUrl + '/index/uploadImage'"
+                          :data-body="{'age': 10}"
+                          :data-preview="true"
+                          :data-progress="true"
+                          @preview="uploadFilePreview"
+                          @beforeSend="uploadFileBeforeSend"
+                          @progress="uploadFileProgress"
+                          @success="uploadFileSuccess"
+                          @error="uploadFileError"
+                  ></com-upload>
+                  <!--<input type="file" :data-accept="uploadFileInfo.accept" :data-max-size="uploadFileInfo.maxSize" v-upload-file>-->
                 </div>
               </div>
               <md-input-container md-clearable>
@@ -39,7 +55,7 @@
                 <label>描述</label>
                 <md-textarea maxlength="70" style="max-height: 70px;" v-model="wordFormInfo.content"></md-textarea>
               </md-input-container>
-            </form>
+            <!--</form>-->
           </div>
           <div class="words-form-footer">
             <md-button md-theme="teal" class="md-raised md-primary" @click.native="saveWord">保存</md-button>
@@ -60,6 +76,7 @@
       return {
         activeIndex: -1,
         wordFormShown: false,
+        requestUrl: this.$store.state.requestUrl,
         wordFormInfo: {
           title: '',
           content: '',
@@ -68,7 +85,16 @@
         uploadFileInfo: {
           accept: 'jpg|png|jpeg|gif',
           maxSize: 2 * 1024 * 1024
-        }
+        },
+        uploadComStyle: {
+          color: '#ee3333',
+          fontSize: '16px',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          wordWrap: 'break-word'
+        },
+        refuseHideWordForm: ''
       }
     },
     computed: {
@@ -82,8 +108,39 @@
     created () {
     },
     methods: {
+      uploadFilePreview (file) {
+
+      },
+      uploadFileBeforeSend (xhr) {
+//        console.log('before send: ', xhr)
+        this.refuseHideWordForm = '正在上传中...'
+      },
+      uploadFileProgress (evt) {
+//        if (evt.lengthComputable) {
+//          console.log('progress ...', evt.total, evt.loaded)
+//        }
+      },
+      uploadFileSuccess (evt) {
+//        console.log('success ...', evt)
+        this.refuseHideWordForm = ''
+      },
+      uploadFileError (err) {
+//        console.log('error', err)
+        this.refuseHideWordForm = ''
+      },
       hideWordForm () {
-        this.wordFormShown = false
+        if (this.refuseHideWordForm.trim() !== '') {
+          this.$store.commit('INSERT_TIP', {
+            type: 'info',
+            message: this.refuseHideWordForm.trim(),
+            cancel: false,
+            duration: 2000,
+            animationIn: 'fadeIn',
+            animationOut: 'fadeOut'
+          })
+        } else {
+          this.wordFormShown = false
+        }
       },
       showWordForm () {
         this.wordFormShown = true
@@ -307,8 +364,7 @@
                       console.log('..... 上传成功：', message)
                     }, false)
                     //发送请求
-                    xhr.open('post', vnode.context.$store.state.requestUrl + '/index/uploadImage')
-                    xhr.setRequestHeader('Content-type', 'multipart/form-data')
+                    xhr.open('post', vnode.context.$store.state.requestUrl + '/index/uploadImage', true)
                     xhr.send(fd)
                   }
                   uploadFile()
@@ -460,7 +516,7 @@
         padding: 15px;
         .words-image {
           width: 100%;
-          height: 80px;
+          height: 100px;
           display: flex;
           align-items: center;
           justify-content: flex-start;
@@ -469,23 +525,10 @@
             color: #666;
           }
           .image {
-            width: 64px;
-            height: 64px;
+            width: 96px;
+            height: 96px;
             border: 1px solid #e5e5e5;
             position: relative;
-            .preview-image {
-              pointer-events: none;
-              max-width: 100%;
-              max-height: 100%;
-            }
-            input[type='file'] {
-              position: absolute;
-              top: 0;
-              width: 64px;
-              height: 64px;
-              opacity: 0;
-              cursor: pointer;
-            }
           }
         }
       }
@@ -502,5 +545,9 @@
         }
       }
     }
+  }
+
+  .test {
+    font-size: 30px!important;
   }
 </style>

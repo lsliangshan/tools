@@ -40,12 +40,28 @@
           </div>
           <div class="letter-form-body">
             <form novalidate>
-              <!--<div class="letter-image">-->
-                <!--<span>图片</span>-->
-                <!--<div class="image">-->
-                  <!--<input type="file">-->
-                <!--</div>-->
-              <!--</div>-->
+              <div class="letter-image">
+                <span>图片</span>
+                <div class="image">
+                  <img class="preview-image" :src="letterFormInfo.image" onerror="this.src='http://static.dei2.com/imgs/favicon.ico'" alt="">
+                  <com-upload
+                          :style="uploadComStyle"
+                          class="test"
+                          name="file"
+                          data-accept="jpg|jpeg|png|gif"
+                          :data-max-size="2*1024*1024"
+                          :data-action="requestUrl + '/index/uploadImage'"
+                          :data-body="{'age': 10}"
+                          :data-preview="true"
+                          :data-progress="true"
+                          @preview="uploadFilePreview"
+                          @beforeSend="uploadFileBeforeSend"
+                          @progress="uploadFileProgress"
+                          @success="uploadFileSuccess"
+                          @error="uploadFileError"
+                  ></com-upload>
+                </div>
+              </div>
               <md-input-container md-clearable>
                 <label>标题</label>
                 <md-input v-model="letterFormInfo.title"></md-input>
@@ -80,7 +96,21 @@
           title: '',
           content: '',
           image: ''
-        }
+        },
+        uploadFileInfo: {
+          accept: 'jpg|png|jpeg|gif',
+          maxSize: 2 * 1024 * 1024
+        },
+        requestUrl: this.$store.state.requestUrl,
+        uploadComStyle: {
+          color: '#ee3333',
+          fontSize: '16px',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+          wordWrap: 'break-word'
+        },
+        refuseHideLetterForm: ''
       }
     },
     computed: {
@@ -137,8 +167,40 @@
           }
         })
       },
+      uploadFilePreview (file) {
+
+      },
+      uploadFileBeforeSend (xhr) {
+//        console.log('before send: ', xhr)
+        this.refuseHideLetterForm = '正在上传中...'
+      },
+      uploadFileProgress (evt) {
+//        if (evt.lengthComputable) {
+//          console.log('progress ...', evt.total, evt.loaded)
+//        }
+      },
+      uploadFileSuccess (evt) {
+//        console.log('success ...', evt)
+        this.refuseHideLetterForm = ''
+        this.letterFormInfo.image = evt.path
+      },
+      uploadFileError (err) {
+//        console.log('error', err)
+        this.refuseHideLetterForm = ''
+      },
       hideLetterForm () {
-        this.letterFormShown = false
+        if (this.refuseHideLetterForm.trim() !== '') {
+          this.$store.commit('INSERT_TIP', {
+            type: 'info',
+            message: this.refuseHideLetterForm.trim(),
+            cancel: false,
+            duration: 2000,
+            animationIn: 'fadeIn',
+            animationOut: 'fadeOut'
+          })
+        } else {
+          this.letterFormShown = false
+        }
       },
       showLetterForm () {
         this.letterFormShown = true
@@ -482,7 +544,7 @@
           padding: 15px;
           .letter-image {
             width: 100%;
-            height: 80px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: flex-start;
@@ -491,8 +553,9 @@
               color: #666;
             }
             .image {
-              width: 64px;
-              height: 64px;
+              position: relative;
+              width: 96px;
+              height: 96px;
               border: 1px solid #e5e5e5;
               input {
                 width: 64px;
