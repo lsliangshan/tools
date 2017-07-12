@@ -131,10 +131,18 @@
 //        })
 //      }
       const that = this
-      $.ajax({
-        async: false,
+//      $.ajax({
+//        async: false,
+//        url: that.$store.state.requestUrl + '/index/getLetters',
+//        dataType: 'jsonp',
+//        success: function (res) {
+//          if (Number(res.code) === 200) {
+//            that.letters = res.data
+//          }
+//        }
+//      })
+      $.post({
         url: that.$store.state.requestUrl + '/index/getLetters',
-        dataType: 'jsonp',
         success: function (res) {
           if (Number(res.code) === 200) {
             that.letters = res.data

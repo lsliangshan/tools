@@ -131,11 +131,11 @@
           const _file = target.target.files[0]
           if (that.dataAccept.split('|').indexOf(_file.name.replace(/.*\.(.*)$/, '$1')) === -1) {
             // 类型不合法
-            alert('类型不合法')
+            alert('类型不合法，请上传' + that.dataAccept + '的文件')
           } else {
             if (Number(_file.size) > Number(that.dataMaxSize)) {
               // 文件过大
-              alert('文件过大')
+              alert('文件过大，文件不能超过' + (that.dataMaxSize / 1024 / 1024).toFixed(2) + 'M')
             } else {
               // 文件上传
               let formData = new FormData(that.$refs['uploader' + that.UUID])
