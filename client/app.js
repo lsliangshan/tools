@@ -16,3 +16,5 @@ const app = new Vue({
 })
 
 export { app, router, store }
+
+document.write('<script language="javascript" type="text/javascript" src="//js.users.51.la/19241858.js"></script>')
