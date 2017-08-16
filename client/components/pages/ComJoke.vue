@@ -143,7 +143,7 @@
     border-radius: 5px;
     cursor: pointer;
     background-color: #e5e5e5;
-    background: url('http://fdfs.xmcdn.com/group27/M03/17/2E/wKgJR1jjBnSzX7eqAAVMqSeBxhY969_web_large.jpg') 100% 100% no-repeat;
+    background: url('https://static.dei2.com/imgs/wKgJR1jjBnSzX7eqAAVMqSeBxhY969_web_large.jpg') 100% 100% no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;

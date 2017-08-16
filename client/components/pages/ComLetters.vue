@@ -6,7 +6,7 @@
     <div class="letter-item init-transition-p3" v-for="(item, index) in letters" :key="item" :class="activeIndex==index?'active':(activeIndex!=-1&&activeIndex!=index?'blur':'')" :data-index="index" @click="handleClick($event)" data-before="dragBefore" data-after="dragAfter" v-ls-init>
       <div class="letter-header"></div>
       <div class="letter-logo">
-        <img :src="item.image" onerror="this.src='http://static.dei2.com/imgs/default.jpg'">
+        <img :src="item.image" onerror="this.src='https://static.dei2.com/imgs/default.jpg'">
       </div>
       <div class="letter-title" :title="item.title">
         <span v-text="item.title"></span>
@@ -43,7 +43,7 @@
               <div class="letter-image">
                 <span>图片</span>
                 <div class="image">
-                  <img class="preview-image" :src="letterFormInfo.image" onerror="this.src='http://static.dei2.com/imgs/favicon.ico'" alt="">
+                  <img class="preview-image" :src="letterFormInfo.image" onerror="this.src='https://static.dei2.com/imgs/favicon.ico'" alt="">
                   <com-upload
                           :style="uploadComStyle"
                           class="test"
@@ -387,7 +387,7 @@
       'lsText': {
         inserted: function (el, binding, vnode) {
           let _img = document.createElement('img')
-          _img.src = 'http://static.dei2.com/imgs/mask2.gif'
+          _img.src = 'https://static.dei2.com/imgs/mask2.gif'
           _img.style.width = '120px'
           _img.style.height = '120px'
           _img.style.position = 'relative'

@@ -15,7 +15,7 @@ const state = {
   appName: pkg.name,
   theme: 'black',
   musicBoxAnimationId: 0,
-  requestUrl: 'http://talkapi.dei2.com',
+  requestUrl: 'https://talkapi.dei2.com',
   // requestUrl: 'http://127.0.0.1:3002',
   showMask: false,
   globalTips: {},
